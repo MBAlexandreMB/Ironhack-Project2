@@ -4,7 +4,7 @@ const Company = new mongoose.model('companies', new mongoose.Schema({
   name: {type: String, required: true}, 
   description: {type: String, required: true},
   logo: {type: String},
-  processes: [{type: mongoose.Types.ObjectId, ref: 'processes'}],
+  processes: [{type: mongoose.Schema.Types.ObjectId, ref: 'processes'}],
   address: {
     street: String,
     number: Number,
@@ -16,5 +16,6 @@ const Company = new mongoose.model('companies', new mongoose.Schema({
 }, {
     timestamps: true,
   }));
+
 
   module.exports = Company;
