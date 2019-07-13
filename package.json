@@ -1,0 +1,29 @@
+{
+  "name": "ironhack-project2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MBAlexandreMB/Ironhack-Project2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MBAlexandreMB/Ironhack-Project2/issues"
+  },
+  "homepage": "https://github.com/MBAlexandreMB/Ironhack-Project2#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "hbs": "^4.0.4",
+    "mongoose": "^5.6.4",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  }
+}
