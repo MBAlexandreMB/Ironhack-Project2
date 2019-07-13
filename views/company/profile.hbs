@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../stylesheets/forms.css">
+
+<form action="/company/signup" method="POST" enctype="multipart/form-data">
+  <label for="name">Name: </label>
+  <input type="text" name="name" required/>
+  <label>Employer Identification Number:</label> 
+  <input type="text" name="ein" required/>
+
+
+  <fieldset>
+    {{#if passWrong}}
+      <legend class='errorMessage'>Login credentials</legend>
+      <p class="errorMessage">{{passWrongMessage}}</p>
+    {{else}}
+      <legend>Login credentials</legend>
+    {{/if}}
+      <label for="username">Username: </label>
+      <input type="text" name="username" required/>
+      <label for="password">Password: </label>
+      <input type="password" name="password" required/>
+      <label for="password">Repeat your password: </label>
+      <input type="password" name="rptpassword" required/>
+  </fieldset>
+<button type="submit">Sign up</button>
+
+{{#if message}}
+<p class="errorMessage">{{message}}</p>
+{{/if}}
+</form>
