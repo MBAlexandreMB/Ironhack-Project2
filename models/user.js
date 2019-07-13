@@ -2,10 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema ({
+    user: {
+        username: {type: String, require: true, unique: true},
+        password: {type: String, require: true, unique: true}
+    },
     personal: {
         name: {type: String, require: true},
         lasName: {type: String, require: true},
-        burnDate: {type: Date, require: true},
+        dateOf: {type: Date, require: true},
         maritalStatus: {type: String, enum: ['single', 'married', 'divorced'], require: true},
         cpf: {type: String, require: true},
         nationality: {type: String, require: true},

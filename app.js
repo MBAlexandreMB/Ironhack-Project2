@@ -19,5 +19,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/company'));
 
+app.use('/user', require('./routes/user'));
+
 
 app.listen(process.env.PORT);
