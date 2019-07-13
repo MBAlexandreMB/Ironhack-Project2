@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 
 const Company = new mongoose.model('companies', new mongoose.Schema({
   name: {type: String, required: true}, 
-  description: {type: String, required: true},
+  username: {type: String, required: true, unique: true},
+  password: {type: String, required: true},
+  email: {type: String, required: true},
+  ein: {type: String, required: true, unique: true},
+  description: {type: String},
   logo: {type: String},
   processes: [{type: mongoose.Schema.Types.ObjectId, ref: 'processes'}],
   address: {
