@@ -4,17 +4,19 @@ const multer = require('multer');
 const {uploadCloudCompany} = require('../config/cloudinary.js');
 const Company = require('../models/company');
 const bcrypt = require('bcrypt');
+const passport = require("passport");
+const {ensureLoggedIn, ensureLoggedOut} = require("connect-ensure-login");
 
 router.get('/', (req, res, next) => {
   res.render('company/index');
 });
 
 //SIGN UP ROUTES
-router.get('/signup', (req, res, next) => {
+router.get('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
   res.render('company/signup');
 });
 
-router.post('/signup', (req, res, next) => {
+router.post('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
   let message = 'Please: ';
   let hash = '';
   const { name, ein, email, password, rptpassword, username } = req.body;
@@ -87,7 +89,21 @@ router.post('/signup', (req, res, next) => {
 
 
 //LOGIN ROUTES
-// router.get('/login');
+router.get('/login', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+  res.render('company/login');
+});
+
+router.get('/auth/linkedin', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+  res.send('linkedin');
+});
+
+// router.post("/login", ensureLoggedOut('/company/dashboard'), passport.authenticate("local-company", {
+//   successRedirect: "company/dashboard",
+//   failureRedirect: "company/login",
+//   failureFlash: true,
+//   passReqToCallback: true
+// }));
+
 
 //---------------------------------------------
 //TO USE ON PROFILE
