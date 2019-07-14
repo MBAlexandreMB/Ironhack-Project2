@@ -5,18 +5,35 @@ const {uploadCloudCompany} = require('../config/cloudinary.js');
 const Company = require('../models/company');
 const bcrypt = require('bcrypt');
 const passport = require("passport");
-const {ensureLoggedIn, ensureLoggedOut} = require("connect-ensure-login");
+// const {ensureLoggedIn, ensureLoggedOut} = require("connect-ensure-login");
+
+function ensureCompanyLoggedIn() {
+  return function(req, res, next) {
+    if (req.isAuthenticated() && req.user.ein) {
+      return next();
+    } else {
+      res.redirect('/company/login');
+    }
+  }
+}
+
+router.post("/login", passport.authenticate("local-company", {
+  successReturnToOrRedirect: "/company/dashboard",
+  failureRedirect: "/company/login",
+  failureFlash: true,
+  passReqToCallback: true
+}));
 
 router.get('/', (req, res, next) => {
   res.render('company/index');
 });
 
 //SIGN UP ROUTES
-router.get('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+router.get('/signup', (req, res, next) => {
   res.render('company/signup');
 });
 
-router.post('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+router.post('/signup', (req, res, next) => {
   let message = 'Please: ';
   let hash = '';
   const { name, ein, email, password, rptpassword, username } = req.body;
@@ -89,20 +106,23 @@ router.post('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) =
 
 
 //LOGIN ROUTES
-router.get('/login', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
-  res.render('company/login');
+router.get('/login', (req, res, next) => {
+  res.render('company/login', { "message": req.flash("error") });
 });
 
-router.get('/auth/linkedin', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+router.get('/auth/linkedin', (req, res, next) => {
   res.send('linkedin');
 });
 
-// router.post("/login", ensureLoggedOut('/company/dashboard'), passport.authenticate("local-company", {
-//   successRedirect: "company/dashboard",
-//   failureRedirect: "company/login",
-//   failureFlash: true,
-//   passReqToCallback: true
-// }));
+router.get("/company/logout", (req, res) => {
+  req.logout();
+  res.redirect("/company/login");
+});
+
+//DASHBOARD
+router.get('/dashboard', ensureCompanyLoggedIn(), (req, res, next) => {
+  res.render('company/dashboard');
+});
 
 
 //---------------------------------------------
