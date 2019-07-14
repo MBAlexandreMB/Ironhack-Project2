@@ -1,0 +1,14 @@
+<form action="/company/login" method="POST">
+  <label for="username">Username, e-mail or Employer Identification Number: </label>
+  <input type="text" name="username" required/>
+  <label for="password">Password: </label>
+  <input type="password" name="password" required/>
+  <button type="submit">Login</button>
+
+
+  <a href="/company/auth/linkedin">Linkedin Login</a>
+
+  {{#if message}}
+    <div class="error-message">{{ message }}</div>
+  {{/if}}
+</form>
