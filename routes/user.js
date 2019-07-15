@@ -13,10 +13,6 @@ router.get('/signup', (req, res, next) => {
   res.render('user/signup');
 });
 
-router.get('/cv', (req, res, next) => {
-  res.render('user/cv');
-});
-
 router.post('/signup', (req, res, next) => {
   const { username, email, password } = req.body;
 
@@ -52,8 +48,13 @@ router.post('/signup', (req, res, next) => {
       next(error);
     });
 });
+//---------------------------------------------------------------------------
 
-
+// CURRICULUM ROUTER
+// CLIENTE REQUISITION
+router.get('/cv', (req, res, next) => {
+  res.render('user/cv');
+});
 //---------------------------------------------------------------------------
 
 // SIGNUP ROUTER
