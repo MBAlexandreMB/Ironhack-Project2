@@ -16,7 +16,10 @@ const Company = new mongoose.model('companies', new mongoose.Schema({
     city: String,
     state: String,
     country: String,
-  }
+  },
+  activationCode: String,
+  active: {type: Boolean, default: false},
+
 }, {
     timestamps: true,
   }));

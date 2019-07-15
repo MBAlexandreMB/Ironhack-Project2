@@ -7,6 +7,7 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const MongoStore = require('connect-mongo')(session);
 const User = require('./models/user');
 const Company = require('./models/company');
 const flash = require('connect-flash');
@@ -35,13 +36,16 @@ app.use(express.static(__dirname + '/public'));
 
 //PASSPORT AND LOGIN. Flash is used for passport error handling
 
-app.use(
-  session({
-    secret: 'ihp2',
-    resave: true,
-    saveUninitialized: true
+app.use(session({
+  secret: "ihp2",
+  cookie: { maxAge: 12000000 },
+  resave: true,
+  saveUninitialized: true,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 24 * 60 * 60
   })
-);
+}));
 
 app.use(flash());
 
@@ -110,6 +114,14 @@ passport.use(
       if (!bcrypt.compareSync(password, user.user.password)) {
         return next(null, false, { message: 'Incorrect password' });
       }
+
+      if (!user.active) {
+        return next(null, false, { message: "Account not active! Check your registered e-mail!" });
+      }
+  
+      return next(null, user);
+    });
+  }));
 
       return next(null, user);
     });
