@@ -89,7 +89,7 @@ router.post('/signup', (req, res, next) => {
       
       Company.create({ name, username, email, password: hash, ein, activationCode })
       .then(() => {
-
+        
         transport.sendMail({
           from: 'register@ihp2.com',
           to: email, 
@@ -169,11 +169,11 @@ uploadCloudCompany.single('logo'),
 (req, res, next) => {
   let logo = undefined;
   const {name, ein, street, number, district, city, state, country} = req.body;
-
+  
   if(req.file) {
     logo = req.file.secure_url;
   }
-
+  
   console.log('User id: ', req.user._id);
   Company.findOneAndUpdate({_id: req.user._id}, {$set: {
     name, 
@@ -211,7 +211,7 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
     })
     return;
   }
-
+  
   Company.findById(req.user._id)
   .then(company => {
     if(!bcrypt.compareSync(oldPassword, company.password)) {
@@ -220,9 +220,9 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
       })
       return;
     }
-
+    
     const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-
+    
     Company.findOneAndUpdate({_id: req.user._id}, {password: hash})
     .then(() => {
       res.render('company/passChange', {
@@ -236,14 +236,28 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
 //---------------------------------------------
 
 // NEW PROCESS ------------------------------------
-router.get('/Processes', (req, res, next) => {
-
+router.get('/Processes', ensureCompanyLoggedIn(), (req, res, next) => {
+  
 });
 
-router.get('/Processes/new', (req, res, next) => {
-  Category.find()
+router.get('/Processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
+  res.render('company/newProcess');
+});
+
+router.get('/processes/new/getSubCategory/:categoryId', ensureCompanyLoggedIn(), 
+(req, res, next) => {
+  Category.findById(req.params.categoryId, {subcategories: 1}).populate('subcategories')
   .then(categories => {
-    console.log(categories);
+    res.status(200).json(categories);
+  })
+  .catch(err => console.log(err));
+});
+
+router.get('/processes/new/getSubCategory/hierarchy', ensureCompanyLoggedIn(), 
+(req, res, next) => {
+  Category.findById({hierarchy: 1})
+  .then(categories => {
+    res.status(200).json(categories);
   })
   .catch(err => console.log(err));
 });
