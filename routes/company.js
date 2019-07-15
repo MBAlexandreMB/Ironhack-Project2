@@ -5,7 +5,7 @@ const {uploadCloudCompany} = require('../config/cloudinary.js');
 const Company = require('../models/company');
 const bcrypt = require('bcrypt');
 const passport = require("passport");
-// const {ensureLoggedIn, ensureLoggedOut} = require("connect-ensure-login");
+const {ensureLoggedOut} = require("connect-ensure-login");
 
 function ensureCompanyLoggedIn() {
   return function(req, res, next) {
@@ -106,15 +106,15 @@ router.post('/signup', (req, res, next) => {
 
 
 //LOGIN ROUTES
-router.get('/login', (req, res, next) => {
+router.get('/login', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
   res.render('company/login', { "message": req.flash("error") });
 });
 
-router.get('/auth/linkedin', (req, res, next) => {
-  res.send('linkedin');
-});
+// router.get('/auth/linkedin', (req, res, next) => {
+//   res.send('linkedin');
+// });
 
-router.get("/company/logout", (req, res) => {
+router.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/company/login");
 });
@@ -124,18 +124,79 @@ router.get('/dashboard', ensureCompanyLoggedIn(), (req, res, next) => {
   res.render('company/dashboard');
 });
 
+router.get('/profile', ensureCompanyLoggedIn(), (req, res, next) => {
+  Company.findById(req.user._id)
+  .then(company => res.render('company/profile', company))
+  .catch(err => console.log(err));
+});
 
+router.post('/profile/save', ensureCompanyLoggedIn(), uploadCloudCompany.single('logo'), (req, res, next) => {
+  let logo = undefined;
+  const {name, ein, street, number, district, city, state, country} = req.body;
+
+  if(req.file) {
+    logo = req.file.secure_url;
+  }
+
+  console.log('User id: ', req.user._id);
+  Company.findOneAndUpdate({_id: req.user._id}, {$set: {
+    name, 
+    ein, 
+    'address.street': street,
+    'address.number': number,
+    'address.district': district,
+    'address.city': city,
+    'address.state': state,
+    'address.country': country,
+    logo
+  }}, {new: true, omitUndefined: true})
+  .then((result) => {
+    console.log(result);
+    res.redirect('/company/dashboard');
+  })
+  .catch(err => {
+    console.log(err);
+    Company.findById(req.user._id)
+    .then(company => res.render('company/profile', {company, message:"Something went wrong! Changes not saved!"}))
+    .catch(err => console.log(err));
+  })
+});
+
+router.get('/profile/credentials', ensureCompanyLoggedIn(), (req, res, next) => {
+  res.render('company/passChange');
+});
+
+router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, next) => {
+  const {password, rptPassword, oldPassword} = req.body;
+  
+  if(password !== rptPassword) {
+    res.render('company/passChange', { 
+      errorMessage: "Your password and your password confirmation don't match. Please, be sure they're equal." 
+    })
+    return;
+  }
+
+  Company.findById(req.user._id)
+  .then(company => {
+    if(!bcrypt.compareSync(oldPassword, company.password)) {
+      res.render('company/passChange', { 
+        errorMessage: "Wrong current password!" 
+      })
+      return;
+    }
+
+    const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    
+    Company.findOneAndUpdate({_id: req.user._id}, {password: hash})
+    .then(() => {
+      res.render('company/passChange', {
+        successMessage: "Password changed!"
+      })
+    })
+    .catch();
+  })
+  .catch();
+});
 //---------------------------------------------
-//TO USE ON PROFILE
-
-//Remember to upload logo on route's header
-// uploadCloudCompany.single('logo')
-
-//Logo check for update
-// let logo = '';
-
-// if(req.file) {
-//   logo = req.file.secure_url;
-// }
 
 module.exports = router;

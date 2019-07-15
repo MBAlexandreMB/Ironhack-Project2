@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require("express-session");
+const MongoStore = require('connect-mongo')(session);
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const passportCompany = require("passport");
@@ -35,8 +36,13 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(session({
   secret: "ihp2",
+  cookie: { maxAge: 12000000 },
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 24 * 60 * 60 // 1 day
+  })
 }));
 
 app.use(flash());

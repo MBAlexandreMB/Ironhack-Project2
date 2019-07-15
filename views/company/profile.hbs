@@ -1,27 +1,40 @@
-<link rel="stylesheet" href="../../stylesheets/forms.css">
+<link rel="stylesheet" href="../../stylesheets/companyProfile.css">
 
-<form action="/company/signup" method="POST" enctype="multipart/form-data">
+<a href="/company/profile/credentials">Change password</a>
+<form action="/company/profile/save" method="POST" enctype="multipart/form-data">
+  <label for="name">Username: </label>
+  <input type="text" name="name" value="{{username}}" disabled/>
   <label for="name">Name: </label>
-  <input type="text" name="name" required/>
+  <input type="text" name="name" value="{{name}}" required/>
   <label>Employer Identification Number:</label> 
-  <input type="text" name="ein" required/>
+  <input type="text" name="ein" value="{{ein}}" required/>
+  
+  {{#if logo}}
+    <img id="profile-company-logo" src="{{logo}}" alt="{{name}}'s logo"/>
+  {{else}}
+    <img id="profile-company-logo" src="../../images/nologo.png" alt="No logo available"/>
+  {{/if}}
+  <label for="logo">Logo: </label>
+  <input id="profile-company-logo-selector" type="file" name="logo" accept=".jpg, .jpeg, .png" />
 
+<fieldset>
+  <legend>Adress</legend>
 
-  <fieldset>
-    {{#if passWrong}}
-      <legend class='errorMessage'>Login credentials</legend>
-      <p class="errorMessage">{{passWrongMessage}}</p>
-    {{else}}
-      <legend>Login credentials</legend>
-    {{/if}}
-      <label for="username">Username: </label>
-      <input type="text" name="username" required/>
-      <label for="password">Password: </label>
-      <input type="password" name="password" required/>
-      <label for="password">Repeat your password: </label>
-      <input type="password" name="rptpassword" required/>
-  </fieldset>
-<button type="submit">Sign up</button>
+  <label for="street">Street: </label>
+  <input type="text" name="street" value="{{address.street}}" />
+  <label for="number">Number: </label>
+  <input type="number" name="number" value="{{address.number}}" />
+  <label for="district">District: </label>
+  <input type="text" name="district" value="{{address.district}}" />
+  <label for="city">City: </label>
+  <input type="text" name="city" value="{{address.city}}" />
+  <label for="state">State: </label>
+  <input type="text" name="state" value="{{address.state}}" />
+  <label for="country">Country: </label>
+  <input type="text" name="country" value="{{address.country}}" />
+</fieldset>
+
+<button type="submit">Save</button> <a href="/company/dashboard">Return to dashboard</a>
 
 {{#if message}}
 <p class="errorMessage">{{message}}</p>

@@ -1,0 +1,17 @@
+.successMessage {
+  color: green;
+}
+
+.errorMessage {
+  color: red;
+}
+
+#profile-company-logo {
+  width: 150px;
+  height: auto;
+}
+
+form > textarea {
+  width: 500px;
+  height: 100px;
+}
