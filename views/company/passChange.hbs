@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../stylesheets/companyProfile.css">
+
+<form action="/company/profile/credentials/save" method="POST">
+  <label for="oldPassword">Current password: </label>
+  <input type="password" name="oldPassword" required/>
+  <label for="password">New password: </label>
+  <input type="password" name="password" required/>
+  <label for="rptPassword">Confirm new password: </label>
+  <input type="password" name="rptPassword" required/>
+  <button type="submit">Change password</button>
+</form>
+
+{{#if errorMessage}}
+  <p class="errorMessage">{{errorMessage}}</p>
+{{/if}}
+
+{{#if successMessage}}
+  <p class="successMessage">{{successMessage}}</p>
+{{/if}}
+
+<a href="/company/profile">Back</a>
+<a href="/company/dashboard">Back to Dashboard</a>
