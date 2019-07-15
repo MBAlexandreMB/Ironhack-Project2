@@ -70,6 +70,10 @@ app.use(flash());
       if (!user || !bcrypt.compareSync(password, user.password)) {
         return next(null, false, { message: "Incorrect username or password" });
       }
+
+      if (!user.active) {
+        return next(null, false, { message: "Account not active! Check your registered e-mail!" });
+      }
   
       return next(null, user);
     });

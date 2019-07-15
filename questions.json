@@ -1,0 +1,50 @@
+//QUESTIONS INSERT
+db.questions.insertMany([
+  {
+    title: "Odometer is to mileage as compass is to",
+    correctAlternative: "direction",
+    incorrectAlternatives: ["Speed", "Hiking", "Needle", "Magnetic field"],
+    type: "multipleChoice",
+    category: "ObjectId('5d2c9d70ec528d0b30765a49')",
+    dificulty: 2
+  },
+  {
+    title: "Look at this series: 2, 1, (1/2), (1/4), ... What number should come next?",
+    correctAlternative: "1/8",
+    incorrectAlternatives: ["1/3", "2/8", "1/16", "1/4"],
+    type: "multipleChoice",
+    category: "ObjectId('5d2c9d70ec528d0b30765a48')", 
+    dificulty: 1
+  },
+  {
+    title: "Which is the word that is a necessary part of 'desert'?",
+    correctAlternative: "Arid",
+    incorrectAlternatives: ["Cactus", "Sand", "Oasis", "Flat"],
+    type: "multipleChoice",
+    category: "ObjectId('5d2c9d70ec528d0b30765a4a')",
+    dificulty: 1
+  }
+])
+
+//CATEGORIES INSERT 
+db.categories.insertMany([
+  {
+    name: 'Number series', description: 'In each series, look for the degree and direction of change between the numbers. In other words, do the numbers increase or decrease, and by how much', hierarchy: 2, subcategories: []
+  }, 
+  {
+    name: 'Analogies', description: 'A good way to figure out the relationship in a given question is to make up a sentence that describes the relationship between the first two words. Then, try to use the same sentence to find out which of the answer choices completes the same relationship with the third word.', hierarchy: 2, subcategories: []
+  },
+  {
+    name: 'Essential part', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 2, subcategories: []
+  }
+])
+
+db.categories.insert(
+  {
+    name: 'Logical Reasoning', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 1, subcategories: [
+      ObjectId("5d2c9d70ec528d0b30765a48"),
+      ObjectId("5d2c9d70ec528d0b30765a49"),
+      ObjectId("5d2c9d70ec528d0b30765a4a")
+    ]
+  }
+)

@@ -32,10 +32,12 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "hbs": "^4.0.4",
+    "json-server": "^0.15.0",
     "mongoose": "^5.6.4",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "multer-storage-cloudinary": "^2.2.1",
+    "nodemailer": "^6.3.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"
   }
