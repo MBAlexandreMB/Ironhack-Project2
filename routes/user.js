@@ -7,6 +7,26 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 //---------------------------------------------------------------------------
 
+function ensureUserLoggedIn() {
+  return function(req, res, next) {
+    if (req.isAuthenticated() && req.user.ein) {
+      return next();
+    } else {
+      res.redirect('/user/login');
+      console.log('no authenticated')
+      console.log(req.user.ein)
+    }
+  }
+}
+
+router.post("/login", passport.authenticate("local-user", {
+  successReturnToOrRedirect: "/user/cv",
+  failureRedirect: "/user/cv",
+  failureFlash: true,
+  passReqToCallback: true
+}));
+
+
 // SIGNUP ROUTER
 // CLIENT REQUISITION
 router.get('/signup', (req, res, next) => {
@@ -52,7 +72,7 @@ router.post('/signup', (req, res, next) => {
 
 // CURRICULUM ROUTER
 // CLIENTE REQUISITION
-router.get('/cv', (req, res, next) => {
+router.get('/cv', ensureUserLoggedIn(),(req, res, next) => {
   res.render('user/cv');
 });
 //---------------------------------------------------------------------------
