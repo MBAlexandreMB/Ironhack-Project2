@@ -9,26 +9,36 @@ const bcryptSalt = 10;
 
 function ensureUserLoggedIn() {
   return function(req, res, next) {
-    if (req.isAuthenticated() && req.user.ein) {
+    // console.log(req.session)
+    if (req.isAuthenticated() /* && req.personal.cpf */) {
       return next();
     } else {
       res.redirect('/user/login');
-      console.log('no authenticated')
-      console.log(req.user.ein)
     }
   }
 }
 
+// LOGIN ROUTER
 router.post("/login", passport.authenticate("local-user", {
-  successReturnToOrRedirect: "/user/cv",
-  failureRedirect: "/user/cv",
+  successRedirect: "/user/cv",
+  failureRedirect: "/user/login",
   failureFlash: true,
   passReqToCallback: true
 }));
 
+router.get("/login", (req, res, next) => {
+  res.render("user/login");
+});
+//---------------------------------------------------------------------------
+
+// LOGOUT ROUTER
+router.get("/user/logout", (req, res) => {
+  req.logout();
+  res.redirect("/user/login");
+});
+//---------------------------------------------------------------------------
 
 // SIGNUP ROUTER
-// CLIENT REQUISITION
 router.get('/signup', (req, res, next) => {
   res.render('user/signup');
 });
@@ -71,22 +81,15 @@ router.post('/signup', (req, res, next) => {
 //---------------------------------------------------------------------------
 
 // CURRICULUM ROUTER
-// CLIENTE REQUISITION
-router.get('/cv', ensureUserLoggedIn(),(req, res, next) => {
+router.get('/cv', ensureUserLoggedIn(), (req, res, next) => {
   res.render('user/cv');
 });
 //---------------------------------------------------------------------------
 
-// SIGNUP ROUTER
-// CLIENT REQUISITION
-router.get('/login', (req, res, next) => {
-  res.render('user/login');
+//DASHBOARD
+router.get('/dashboard', ensureUserLoggedIn(), (req, res, next) => {
+  res.render('user/dashboard');
 });
-
-router.get('/logout', (req, res, next) => {
-  res.render('user/logout');
-});
-
 //---------------------------------------------------------------------------
 
 module.exports = router;
