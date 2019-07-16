@@ -1,60 +1,113 @@
-<form action="/user/cv" method="post">
-<label for="" name="">Name</label>
-<input type="text">
-<label for="" name="">Last Name</label>
-<input type="text">
-<label for="" name="">Date of birth</label>
-<input type="text">
-<label for="" name="">Marital status</label>
-<input type="text">
-<label for="" name="">CPF</label>
-<input type="text">
-<label for="" name="">Nationality</label>
-<input type="text">
+<form action="/user/cv" method="POST" enctype="multipart/form-data">
+  <label>Photo</label>
+  <input type="file" name="photo">
+<label for="">Name</label>
+<input type="text" name="name" value="{{personal.name}}">
+<label for="">Last Name</label>
+<input type="text" name="lastName" value="{{personal.lastName}}">
+<label for="">Date of birth</label>
+<input type="date" name="dateOfBirth" value="{{personal.dateOfBirth}}">
+<label for="">Marital status</label>
+    <input id="msHidden" type="hidden" value="{{personal.maritalStatus}}">
+<select name="maritalStatus" id="">
+    <option class="msoption" value="single">Single</option>
+    <option class="msoption" value="married">Married</option>
+    <option class="msoption" value="divorced">Divorced</option>
+</select>
+<label for="cpf">CPF</label>
+<input type="text" name="cpf" value="{{personal.cpf}}">
+<label for="">Email</label>
+<input type="email" name="email" value="{{personal.email}}">
+<label for="">Phone</label>
+<input type="number" name="phone" value="{{personal.phone}}">
+<label for="">Telephone</label>
+<input type="number" name="telephone" value="{{personal.telephone}}">
+<label for="">Facebook</label>
+<input type="url" name="facebook" value="{{personal.socialMedia.facebook}}">
+<label for="">linkedin</label>
+<input type="url" name="linkedin" value="{{personal.socialMedia.linkedin}}">
+<label for="">Website/portifolio</label>
+<input type="url" name="sitePortifolio" value="{{personal.socialMedia.sitePortifolio}}">
+<label for="" >Nationality</label>
+<input type="text" name="nationality" value="{{personal.nationality}}">
 
-<label for="" name="">street</label>
-<input type="text">
-<label for="" name="">Number</label>
-<input type="text">
-<label for="" name="">District</label>
-<input type="text">
-<label for="" name="">City</label>
-<input type="text">
-<label for="" name="">State</label>
-<input type="text">
-<label for="" name="">country</label>
-<input type="text">
-<label for="" name="">Zip code</label>
-<input type="text">
+<label for="">street</label>
+<input type="text" name="street" value="{{adress.street}}">
+<label for="">Number</label>
+<input type="number" name="number" value="{{adress.number}}">
+<label for="">District</label>
+<input type="text" name="district" value="{{adress.district}}">
+<label for="">City</label>
+<input type="text" name="city" value="{{adress.city}}">
+<label for="">State</label>
+<input type="text" name="state" value="{{adress.state}}">
+<label for="">country</label>
+<input type="text" name="country" value="{{adress.country}}">
+<label for="">Zip code</label>
+<input type="number" name="zipCode" value="{{adress.zipCode}}">
 
-<label for="" name="">Professional resume</label>
-<input type="text">
-<label for="" name="">Degree</label>
-<input type="text">
-<label for="" name="">Institution</label>
-<input type="text">
-<label for="" name="">Field of study</label>
-<input type="text">
-<label for="" name="">Start Date</label>
-<input type="text">
-<label for="" name="">End Date</label>
-<input type="text">
+<label for="">Professional resume</label>
+<input type="text" name="professionalResume" value="{{skills.professionalResume}}">
 
-<label for="" name="">Idiom</label>
-<input type="text">
+<label for="">Education</label>
+<label for="">Degree</label>
+<input type="text" name="degree" value="{{skills.education.degree}}">
+<label for="">Institution</label>
+<input type="text" name="institution" value="{{skills.education.institution}}">
+<label for="">Field of study</label>
+<input type="text" name="fieldOfStudy" value="{{skills.education.fieldOfStudy}}">
+<label for="">Start Date</label>
+<input type="date" name="educationStartDate" value="{{skills.education.period.startDate}}">
+<label for="">End Date</label>
+<input type="date" name="educationEndDate" value="{{skills.education.period.endDate}}">
+
+<label for="">Languages</label>
+<label for="">Idiom</label>
+<input type="text" name="idiom" value="{{languages.idiom}}">
 <label for="" name="">level</label>
-<input type="text">
+<input type="text" name="level" value="{{languages.level}}">
 
 <label for="" name="">Professional experince</label>
-<input type="text">
 <label for="" name="">Company name</label>
-<input type="text">
+<input type="text" name="companyName" value="{{experiences.companyName}}">
 <label for="" name="">Occupation</label>
-<input type="text">
+<input type="text" name="occupation" value="{{experiences.occupation}}">
 <label for="" name="">Start date</label>
-<input type="text">
+<input type="date" name="experienceStartDate" value="{{experiences.period.startDate}}">
 <label for="" name="">End date</label>
-<input type="text">
+<input type="date" name="experienceEndDate" value="{{experiences.period.endDate}}">
 <label for="" name="">Description</label>
-<input type="text">
+<input type="text" name="description" value="{{experiences.description}}">
+
+<label for="" name="">Username</label>
+<input type="text" name="username" value="{{user.username}}">
+
+<label for="" name="">Password</label>
+<input type="password" name="password">
+
+<label for="" name="">Confirm password</label>
+<input type="password" name="ConfirmPassword">
+
+
+<button type="submit">Save</button>
+
+{{message}}
 </form>
+
+
+<script>
+    window.onload = () => {
+        switch(document.getElementById('msHidden').value){
+            case 'single':
+            document.getElementsByClassName("msoption")[0].selected = true;
+            break;
+            case 'married':
+            document.getElementsByClassName("msoption")[1].selected = true;
+            break;
+            case 'divorced':
+            document.getElementsByClassName("msoption")[2].selected = true;
+            break;
+        }
+        
+        }
+</script>

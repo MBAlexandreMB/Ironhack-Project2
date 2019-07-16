@@ -167,7 +167,7 @@ router.get('/profile', ensureCompanyLoggedIn(), (req, res, next) => {
 
 router.post('/profile/save', 
 ensureCompanyLoggedIn(), 
-uploadCloudCompany.single('logo'), 
+// uploadCloudCompany.single('logo'), 
 (req, res, next) => {
   let logo = undefined;
   const {name, ein, street, number, district, city, state, country} = req.body;

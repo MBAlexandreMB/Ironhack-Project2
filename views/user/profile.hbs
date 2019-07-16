@@ -1,0 +1,238 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet" href="/stylesheets/profile.css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container emp-profile">
+    <form method="post" action="/user/profile" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img src={{imgPath}}
+                        alt="" />
+                    {{!-- <div class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <input type="file" name="photo" />
+                    </div> --}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5>
+                        {{personal.name}} {{personal.lastName}}
+                    </h5>
+                    <h6>
+                        {{experiences.occupation}}
+                    </h6>
+                    <p class="proile-rating">RANKINGS : <span>8/10</span></p>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                aria-controls="home" aria-selected="true">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="education-tab" data-toggle="tab" href="#education" role="tab"
+                                aria-controls="education" aria-selected="false">Education</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="experiences-tab" data-toggle="tab" href="#experiences" role="tab"
+                                aria-controls="experiences" aria-selected="false">Experiences</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"><a href="/user/cv">Edit Profile</a></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-work">
+                    <p>WORK LINK</p>
+                    <a href="">Website Link</a><br />
+                    <a href="">Bootsnipp Profile</a><br />
+                    <a href="">Bootply Profile</a>
+                    <p>SKILLS</p>
+                    <a href="">Web Designer</a><br />
+                    <a href="">Web Developer</a><br />
+                    <a href="">WordPress</a><br />
+                    <a href="">WooCommerce</a><br />
+                    <a href="">PHP, .Net</a><br />
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Username</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{user.username}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Full name</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.name}} {{personal.lastName}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Date of Birth</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.dateOfBirth}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Marital Status</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.maritalStatus}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>CPF</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.cpf}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Nationality</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.nationality}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Email</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.email}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Phone</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.phone}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Telephone</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{personal.telephone}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Adress</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{adress.street}}, {{adress.number}}, {{adress.district}}, {{adress.city}} -
+                                    {{adress.state}} - {{adress.country}} - {{adress.zipCode}} </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="education" role="tabpanel" aria-labelledby="education-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Degree</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{skills.education.degree}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Institution</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{skills.education.institution}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Field of study</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{skills.education.fieldOfStudy}}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Idiom</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{languages.idiom}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Level</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{languages.level}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Period</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{skills.education.period.startDate}} - {{skills.education.period.endDate}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="experiences" role="tabpanel" aria-labelledby="experiences-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Company Name</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{experiences.companyName}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Occupation</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{experiences.occupation}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Period</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{experiences.period.startDate}} - {{experiences.period.endDate}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Description</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{experiences.description}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
