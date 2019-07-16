@@ -66,13 +66,11 @@ const UserSchema = new Schema({
     answer: { type: String },
     statusAnswer: { type: Boolean }
   },
-  process: {
-    companyID: { type: String },
-    processID: { type: String }
-  },
   activationCode: String,
-  active: { type: Boolean, default: false }
+  active: { type: Boolean, default: false },
+  processes: [{type: Schema.Types.ObjectId, ref: 'processes'}],
 });
+   
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model("User", UserSchema);
 module.exports = User;

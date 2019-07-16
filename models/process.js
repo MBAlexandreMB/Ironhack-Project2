@@ -13,7 +13,8 @@ const Process = new mongoose.model('processes', new mongoose.Schema({
     'Supervision/Coordination',
     'Management',
     'Direction']},
-  prerequisites: [{type: mongoose.Schema.Types.ObjectId, ref: 'categories'}],
+  categories: [{type: mongoose.Schema.Types.ObjectId, ref: 'categories'}],
+  difficulties: [String],
 }, {
     timestamps: true,
   }));

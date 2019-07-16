@@ -1,0 +1,7 @@
+<ul>
+  {{#each company.processes}}
+  <li><a href="/company/processes/show/{{_id}}">{{title}} - {{jobRole}} ({{hierarchyOfRole}})</a></li>
+  {{/each}}
+</ul>
+<a href="/company/processes/new">Create a new process</a>
+<a href="/company/dashboard">Back to dashboard</a>

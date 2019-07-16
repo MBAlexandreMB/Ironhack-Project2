@@ -7,7 +7,7 @@ const Question = new mongoose.model('questions', new mongoose.Schema(
   incorrectAlternatives: [{type: String}],
   type: {type: String, enum: ['multipleChoice']},
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
-  dificulty: Number,
+  difficulty: Number,
 }, {
     timestamps: true,
   }));

@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="../../stylesheets/companyProfile.css">
+
+<form action="/company/processes/new" method="POST"> 
+<label for="title">Title:</label>
+<input name="title" type="text" /> 
+<label for="jobRole">Job Role:</label>
+<input name="jobRole" type="text" /> 
+<label for="hierarchyOfRole">Hierarchy of role:</label>
+<select name="hierarchyOfRole" >
+  <option value="Auxiliar/Operational">Auxiliar/Operational</option>
+  <option value="Technical">Technical</option>
+  <option value="Internship">Internship</option>
+  <option value="Junior/Trainee">Junior/Trainee</option>
+  <option value="Full">Full</option>
+  <option value="Senior">Senior</option>
+  <option value="Supervision/Coordination">Supervision/Coordination</option>
+  <option value="Management">Management</option>
+  <option value="Direction">Direction</option>
+</select>
+
+  <div id="checkbox-container">
+  </div>
+  <button type="submit">Create new process</button>
+</form>
+
+<a href="/company/processes">Back</a>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../../js/newProcess.js"></script>
+
