@@ -1,6 +1,14 @@
-<form> 
+<form action="/company/processes/new" method="POST"> 
+<label for="title">Title:</label>
+<input name="title" type="text" /> 
+<label for="jobRole">Job Role:</label>
+<input name="jobRole" type="text" /> 
+<label for="hierarchyOfRole">Hierarchy of role:</label>
+<input name="hierarchyOfRole" type="text" /> 
+
   <div id="checkbox-container">
   </div>
+  <button type="submit">Create new process</button>
 </form>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
