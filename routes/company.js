@@ -305,7 +305,6 @@ router.get('/processes/show/:processId', (req, res, next) => {
 
   Promise.all([getUsers, getProcess])
   .then(result => {
-    console.log(result[0][0].personal);
     res.render('company/showProcess', {users: result[0], process: result[1]});
   })
   .catch(err => console.log(err));

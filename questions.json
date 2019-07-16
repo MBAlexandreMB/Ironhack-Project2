@@ -52,3 +52,21 @@ db.categories.insert(
     name: 'Word analogies', description: 'A good way to figure out the relationship in a given question is to make up a sentence that describes the relationship between the first two words. Then, try to use the same sentence to find out which of the answer choices completes the same relationship with the third word.', hierarchy: 3, subcategories: []
 
   })
+
+
+  db.categories.insertMany([
+    {
+      name: 'SubTest1', description: 'In each series, look for the degree and direction of change between the numbers. In other words, do the numbers increase or decrease, and by how much', hierarchy: 2, subcategories: []
+    }, 
+    {name: 'SubTest2', description: 'A good way to figure out the relationship in a given question is to make up a sentence that describes the relationship between the first two words. Then, try to use the same sentence to find out which of the answer choices completes the same relationship with the third word.', hierarchy: 2, subcategories: []},
+    {
+      name: 'SubTest3', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 2, subcategories: []
+    }
+  ])
+
+  db.categories.insert(
+  {name: 'Test', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 1, subcategories: [
+      ObjectId("5d2d237e9f176b141614a40c"),
+      ObjectId("5d2d237e9f176b141614a40d"),
+      ObjectId("5d2d237e9f176b141614a40e")
+    ]})
