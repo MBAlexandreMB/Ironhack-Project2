@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const {uploadCloudCompany} = require('../config/cloudinary.js');
 const Company = require('../models/company');
 const Category = require('../models/category');
 const bcrypt = require('bcrypt');
 const passport = require("passport");
-const {ensureLoggedOut} = require("connect-ensure-login");
+const {ensureLoggedOut, ensureLoggedIn} = require("connect-ensure-login");
 const transport = require('../config/mailtrap');
 const Process = require('../models/process');
 const User = require('../models/user');
+const Questions = require('../models/questions');
 
 function ensureCompanyLoggedIn() {
   return function(req, res, next) {
@@ -26,11 +26,11 @@ router.get('/', (req, res, next) => {
 });
 
 //SIGN UP ROUTES ------------------------------------------------------------------
-router.get('/signup', (req, res, next) => {
+router.get('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
   res.render('company/signup');
 });
 
-router.post('/signup', (req, res, next) => {
+router.post('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
   let message = 'Please: ';
   let hash = '';
   const { name, ein, email, password, rptpassword, username } = req.body;
@@ -117,7 +117,7 @@ router.post('/signup', (req, res, next) => {
   .catch(err => console.log(err));
 });
 
-router.get('/signup/confirmation/:activationCode', (req, res, next) => {
+router.get('/signup/confirmation/:activationCode', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
   Company.findOneAndUpdate({activationCode: req.params.activationCode}, {active: true}, {new: true})
   .then(company => {
     if (company) {
@@ -255,33 +255,47 @@ router.post('/processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
   delete req.body.title;
   delete req.body.jobRole;
   delete req.body.hierarchyOfRole;
-
+  
   const selectedCategories = req.body;
   const categoriesToRemove = [];
+  const diffArrName = [];
+  const diffArrValue = [];
   let categoriesToUse = [];
   for (let key in selectedCategories) {
-    let arr = selectedCategories[key].split('/');
-    categoriesToUse.push(arr[0]);
-    if (arr.length > 1) {
-      for (let x = 1; x < arr.length; x += 1) {
-        categoriesToRemove.push(arr[x]); 
+    if(key.includes('<-hier')) {
+      diffArrName.push(key.slice(0, 24));
+      diffArrValue.push(selectedCategories[key]);
+    } else {
+      let arr = selectedCategories[key].split('/');
+      categoriesToUse.push(arr[0]);
+      if (arr.length > 1) {
+        for (let x = 1; x < arr.length; x += 1) {
+          categoriesToRemove.push(arr[x]); 
+        }
       }
     }
   }
+  
   categoriesToUse = categoriesToUse.filter(a => !categoriesToRemove.includes(a));
-
-  Process.create({title: title, jobRole: jobRole, hierarchyOfRole: hierarchyOfRole, prerequisites: categoriesToUse})
+  
+  const difficultiesToUse = [];
+  for (let key in categoriesToUse) {
+    difficultiesToUse.push(categoriesToUse[key] + "->" + diffArrValue[diffArrName.indexOf(categoriesToUse[key])])
+  }
+  
+  Process.create({title: title, jobRole: jobRole, hierarchyOfRole: hierarchyOfRole, categories: categoriesToUse, difficulties: difficultiesToUse})
   .then(result => {
     Company.findOneAndUpdate({_id: req.user._id}, {$push: {processes: result._id}})
     .then(() => {
       res.redirect('/company/processes');
     })
     .catch(err => console.log(err));
+
   })
   .catch(err => console.log(err));
 });
 
-router.get('/processes/new/getSubCategory/hierarchy', ensureCompanyLoggedIn(), 
+router.get('/processes/new/getSubCategory/hierarchy', 
 (req, res, next) => {
   Category.find({hierarchy: 1})
   .then(categories => {
@@ -290,7 +304,7 @@ router.get('/processes/new/getSubCategory/hierarchy', ensureCompanyLoggedIn(),
   .catch(err => console.log(err));
 });
 
-router.get('/processes/new/getSubByIdCategory/:categoryId', ensureCompanyLoggedIn(), 
+router.get('/processes/new/getSubByIdCategory/:categoryId', 
 (req, res, next) => {
   Category.findById(req.params.categoryId, {subcategories: 1}).populate('subcategories')
   .then(categories => {
@@ -299,17 +313,56 @@ router.get('/processes/new/getSubByIdCategory/:categoryId', ensureCompanyLoggedI
   .catch(err => console.log(err));
 });
 
-router.get('/processes/show/:processId', (req, res, next) => {
-  const getUsers = User.find({processes: req.params.processId});
-  const getProcess = Process.findById(req.params.processId);
+router.get('/processes/show/:processId', ensureLoggedIn('/'), (req, res, next) => {
+  const link = `${process.env.baseURL}/user/confirmation/company/${req.user._id}/process/${req.params.processId}`;
 
+  const getUsers = User.find({processes: req.params.processId});
+  const getProcess = Process.findById(req.params.processId).populate('categories');
+  
   Promise.all([getUsers, getProcess])
   .then(result => {
-    console.log(result[0][0].personal);
-    res.render('company/showProcess', {users: result[0], process: result[1]});
-  })
-  .catch(err => console.log(err));
+
+    const catQuestRel = [];
+    const categoryArr = [];
+    let questionArr = [];
+    result[1].categories.forEach(category => {
+      categoryArr.push(category._id);
+    })
+    
+    Questions.find({category: {$in: categoryArr}})
+    .then(questions => {
+      questionArr = questions.filter(question => {
+        for (let item in result[1].difficulties){
+          let index = result[1].difficulties[item].indexOf(question.category);
+          if ( index != -1)
+          {
+            let diff = result[1].difficulties[index];
+
+            if(question.difficulty == diff.slice(diff.indexOf('->') + 2, diff.length)) {
+              return true;
+            }
+          }
+        }
+      })
+      console.log(questionArr);
+      result[1].categories.forEach(category => {
+        catQuestRel.push([category.name, []]);
+        questionArr.forEach(question => {
+          if(String(question.category) === String(category._id)){
+            catQuestRel[catQuestRel.length - 1][1].push(question._id);
+          }
+        });
+      });
+      res.render('company/showProcess', {users: result[0], process: result[1], catQuestRel, company: req.user, link});
+    })
+    .catch(err => console.log(err));
+  })  
+.catch(err => console.log(err));
 });
+
+// router.get('/processes/new/getNumOfQuestions', (req, res, next) => {
+//   Questions.find({})
+// });
 //---------------------------------------------
 
 module.exports = router;

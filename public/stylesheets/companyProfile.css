@@ -15,3 +15,25 @@ form > textarea {
   width: 500px;
   height: 100px;
 }
+
+.radio-label {
+  font-size: 0.8rem;
+}
+
+#checkbox-container {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.category-group {
+  width: 33%;
+}
+
+.subcategory-container {
+  padding-left: 15px;
+}
+
+.divinfo-container {
+  display: flex;
+  flex-flow: row wrap;
+}

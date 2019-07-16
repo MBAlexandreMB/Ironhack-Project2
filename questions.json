@@ -5,24 +5,24 @@ db.questions.insertMany([
     correctAlternative: "direction",
     incorrectAlternatives: ["Speed", "Hiking", "Needle", "Magnetic field"],
     type: "multipleChoice",
-    category: "ObjectId('5d2c9d70ec528d0b30765a49')",
-    dificulty: 2
+    category: ObjectId("5d2e276ae48ad4c9f54b46f9"),
+    difficulty: 2
   },
   {
     title: "Look at this series: 2, 1, (1/2), (1/4), ... What number should come next?",
     correctAlternative: "1/8",
     incorrectAlternatives: ["1/3", "2/8", "1/16", "1/4"],
     type: "multipleChoice",
-    category: "ObjectId('5d2c9d70ec528d0b30765a48')", 
-    dificulty: 1
+    category: ObjectId("5d2e276ae48ad4c9f54b46f9"), 
+    difficulty: 1
   },
   {
     title: "Which is the word that is a necessary part of 'desert'?",
     correctAlternative: "Arid",
     incorrectAlternatives: ["Cactus", "Sand", "Oasis", "Flat"],
     type: "multipleChoice",
-    category: "ObjectId('5d2c9d70ec528d0b30765a4a')",
-    dificulty: 1
+    category: ObjectId("5d2e276ae48ad4c9f54b46f9"),
+    difficulty: 1
   }
 ])
 
@@ -31,7 +31,7 @@ db.categories.insertMany([
   {
     name: 'Number series', description: 'In each series, look for the degree and direction of change between the numbers. In other words, do the numbers increase or decrease, and by how much', hierarchy: 2, subcategories: []
   }, 
-  {name: 'Analogies', description: 'A good way to figure out the relationship in a given question is to make up a sentence that describes the relationship between the first two words. Then, try to use the same sentence to find out which of the answer choices completes the same relationship with the third word.', hierarchy: 2, subcategories: [ObjectId("5d2cc9199f176b141614a40b")]},
+  {name: 'Analogies', description: 'A good way to figure out the relationship in a given question is to make up a sentence that describes the relationship between the first two words. Then, try to use the same sentence to find out which of the answer choices completes the same relationship with the third word.', hierarchy: 2, subcategories: [ObjectId("5d2e277ae48ad4c9f54b46fa")]},
   {
     name: 'Essential part', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 2, subcategories: []
   }
@@ -40,9 +40,9 @@ db.categories.insertMany([
 db.categories.insert(
   {
     name: 'Logical Reasoning', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 1, subcategories: [
-      ObjectId("5d2c9d70ec528d0b30765a48"),
-      ObjectId("5d2c9d70ec528d0b30765a49"),
-      ObjectId("5d2c9d70ec528d0b30765a4a")
+      ObjectId("5d2e2757e48ad4c9f54b46f6"),
+      ObjectId("5d2e2757e48ad4c9f54b46f7"),
+      ObjectId("5d2e2757e48ad4c9f54b46f8")
     ]
   }
 )
@@ -52,3 +52,21 @@ db.categories.insert(
     name: 'Word analogies', description: 'A good way to figure out the relationship in a given question is to make up a sentence that describes the relationship between the first two words. Then, try to use the same sentence to find out which of the answer choices completes the same relationship with the third word.', hierarchy: 3, subcategories: []
 
   })
+
+
+  db.categories.insertMany([
+    {
+      name: 'SubTest1', description: 'In each series, look for the degree and direction of change between the numbers. In other words, do the numbers increase or decrease, and by how much', hierarchy: 2, subcategories: []
+    }, 
+    {name: 'SubTest2', description: 'A good way to figure out the relationship in a given question is to make up a sentence that describes the relationship between the first two words. Then, try to use the same sentence to find out which of the answer choices completes the same relationship with the third word.', hierarchy: 2, subcategories: []},
+    {
+      name: 'SubTest3', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 2, subcategories: []
+    }
+  ])
+
+  db.categories.insert(
+  {name: 'Test', description: 'Each question has an underlined word followed by four answer choices. You will choose the word that is a necessary part of the underlined word.', hierarchy: 1, subcategories: [
+		ObjectId("5d2e2837e48ad4c9f54b46fc"),
+		ObjectId("5d2e2837e48ad4c9f54b46fd"),
+		ObjectId("5d2e2837e48ad4c9f54b46fe")
+    ]})
