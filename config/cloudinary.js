@@ -19,5 +19,16 @@ var storage = cloudinaryStorage({
 
 const uploadCloudCompany = multer({ storage: storage });
 
+var userStorage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: 'user-photos',
+  allowedFormats: ['jpg', 'png'],
+  filename: function (req, file, cb) {
+    cb(null, file.filename);
+  }
+});
 
-module.exports = {uploadCloudCompany};
+const uploadCloudUser = multer({ storage: userStorage });
+
+
+module.exports = {uploadCloudCompany, uploadCloudUser};

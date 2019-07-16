@@ -104,64 +104,28 @@ app.use(passport.session());
 passport.use(
   'local-user',
   new LocalStrategy((username, password, next) => {
-    User.findOne({ 'personal.email': username }, (err, user) => {
+    User.findOne({ $or: [{ 'personal.email': username }, { 'personal.cpf': username }, { 'user.username': username }]}, (err, user) => {
       if (err) {
-        return next(err);
+        return next(err),
+        console.log(err)
       }
       if (!user) {
-        return next(null, false, { message: 'Incorrect username' });
+        return next(null, false, { message: 'Incorrect username' }), console.log('incorrect username');
       }
       if (!bcrypt.compareSync(password, user.user.password)) {
-        return next(null, false, { message: 'Incorrect password' });
+        return next(null, false, { message: 'Incorrect password' }), console.log('incorrect password');
       }
 
       if (!user.active) {
-        return next(null, false, { message: "Account not active! Check your registered e-mail!" });
+        return next(null, false, { message: "Account not active! Check your registered e-mail!" }), console.log('account active');
       }
   
       return next(null, user);
     });
   }));
 
-      return next(null, user);
-    });
-  })
-);
-
 app.use(passport.initialize());
 app.use(passport.session());
-
-//   passport.serializeUser((user, cb) => {
-//     cb(null, user._id);
-//   });
-
-//   passport.deserializeUser((id, cb) => {
-//     User.findById(id, (err, user) => {
-//       if (err) { return cb(err); }
-//       cb(null, user);
-//     });
-//   });
-
-// passport.use('local-user', new LocalStrategy(
-//   { passReqToCallback: true },
-//   (req, username, password, next) => {
-//     User.findOne({ username }, (err, user) => {
-//     if (err) {
-//       return next(err);
-//     }
-//     if (!user) {
-//       return next(null, false, { message: "Incorrect username" });
-//     }
-//     if (!bcrypt.compareSync(password, user.password)) {
-//       return next(null, false, { message: "Incorrect password" });
-//     }
-
-//     return next(null, user);
-//   });
-// }));
-
-// app.use(passport.initialize());
-// app.use(passport.session());
 //----------------------------------
 
 app.use('/', require('./routes/index'));
