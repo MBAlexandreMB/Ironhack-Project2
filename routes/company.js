@@ -8,6 +8,8 @@ const bcrypt = require('bcrypt');
 const passport = require("passport");
 const {ensureLoggedOut} = require("connect-ensure-login");
 const transport = require('../config/mailtrap');
+const Process = require('../models/process');
+const User = require('../models/user');
 
 function ensureCompanyLoggedIn() {
   return function(req, res, next) {
@@ -95,8 +97,8 @@ router.post('/signup', (req, res, next) => {
           to: email, 
           subject: 'IHP2 - Register', 
           text: `Follow this link to activate your account: 
-          ${process.env.baseURL}/signup/confirmation/${activationCode}`,
-          html: `<a href="${process.env.baseURL}/signup/confirmation/${activationCode}">Click here</a> 
+          ${process.env.baseURL}/company/signup/confirmation/${activationCode}`,
+          html: `<a href="${process.env.baseURL}/company/signup/confirmation/${activationCode}">Click here</a> 
           to activate your account!`
         })
         .then((() => res.redirect('/company/login')))
@@ -235,16 +237,60 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
 });
 //---------------------------------------------
 
-// NEW PROCESS ------------------------------------
-router.get('/Processes', ensureCompanyLoggedIn(), (req, res, next) => {
-  
+// PROCESSES ------------------------------------
+router.get('/processes', ensureCompanyLoggedIn(), (req, res, next) => {
+  Company.findById(req.user._id).populate('processes')
+  .then(company => {
+    res.render('company/process', {company});
+  })
+  .catch(err => console.log(err));
 });
 
-router.get('/Processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
+router.get('/processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
   res.render('company/newProcess');
 });
 
-router.get('/processes/new/getSubCategory/:categoryId', ensureCompanyLoggedIn(), 
+router.post('/processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
+  const {title, jobRole, hierarchyOfRole} = req.body;
+  delete req.body.title;
+  delete req.body.jobRole;
+  delete req.body.hierarchyOfRole;
+
+  const selectedCategories = req.body;
+  const categoriesToRemove = [];
+  let categoriesToUse = [];
+  for (let key in selectedCategories) {
+    let arr = selectedCategories[key].split('/');
+    categoriesToUse.push(arr[0]);
+    if (arr.length > 1) {
+      for (let x = 1; x < arr.length; x += 1) {
+        categoriesToRemove.push(arr[x]); 
+      }
+    }
+  }
+  categoriesToUse = categoriesToUse.filter(a => !categoriesToRemove.includes(a));
+
+  Process.create({title: title, jobRole: jobRole, hierarchyOfRole: hierarchyOfRole, prerequisites: categoriesToUse})
+  .then(result => {
+    Company.findOneAndUpdate({_id: req.user._id}, {$push: {processes: result._id}})
+    .then(() => {
+      res.redirect('/company/processes');
+    })
+    .catch(err => console.log(err));
+  })
+  .catch(err => console.log(err));
+});
+
+router.get('/processes/new/getSubCategory/hierarchy', ensureCompanyLoggedIn(), 
+(req, res, next) => {
+  Category.find({hierarchy: 1})
+  .then(categories => {
+    res.status(200).json(categories);
+  })
+  .catch(err => console.log(err));
+});
+
+router.get('/processes/new/getSubByIdCategory/:categoryId', ensureCompanyLoggedIn(), 
 (req, res, next) => {
   Category.findById(req.params.categoryId, {subcategories: 1}).populate('subcategories')
   .then(categories => {
@@ -253,11 +299,14 @@ router.get('/processes/new/getSubCategory/:categoryId', ensureCompanyLoggedIn(),
   .catch(err => console.log(err));
 });
 
-router.get('/processes/new/getSubCategory/hierarchy', ensureCompanyLoggedIn(), 
-(req, res, next) => {
-  Category.findById({hierarchy: 1})
-  .then(categories => {
-    res.status(200).json(categories);
+router.get('/processes/show/:processId', (req, res, next) => {
+  const getUsers = User.find({processes: req.params.processId});
+  const getProcess = Process.findById(req.params.processId);
+
+  Promise.all([getUsers, getProcess])
+  .then(result => {
+    console.log(result[0][0].personal);
+    res.render('company/showProcess', {users: result[0], process: result[1]});
   })
   .catch(err => console.log(err));
 });

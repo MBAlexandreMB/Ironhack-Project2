@@ -1,0 +1,9 @@
+<h1>{{process.title}} - {{process.jobRole}} ({{process.hierarchyOfRole}})</h1>
+<h3>Inscritos:</h3>
+
+<ul>
+{{#each users}}
+  <li><a href="/user/profile/{{_id}}">{{personal.email}}</a></li>
+{{/each}}
+</ul>
+

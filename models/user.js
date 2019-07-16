@@ -67,7 +67,8 @@ const UserSchema = new Schema ({
         question: {type: String},
         answer: {type: String},
         statusAnswer: {type: Boolean}
-    }
+    },
+    processes: [{type: Schema.Types.ObjectId, ref: 'processes'}],
 })
 
 const User = mongoose.model("User", UserSchema);
