@@ -61,11 +61,11 @@ const UserSchema = new Schema({
     description: { type: String }
   },
   imgPath: String,
-  questions: {
-    question: { type: String },
+  questions: [{
+    question: { type: Schema.Types.ObjectId, ref: 'questions' },
     answer: { type: String },
     statusAnswer: { type: Boolean }
-  },
+  }],
   activationCode: String,
   active: { type: Boolean, default: false },
   processes: [{type: Schema.Types.ObjectId, ref: 'processes'}],
