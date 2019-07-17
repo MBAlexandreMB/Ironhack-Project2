@@ -322,9 +322,7 @@ router.get('/logout', (req, res) => {
 router.get('/confirmation/company/:companyID/process/:processID', ensureUserLoggedIn(), (req, res, next) => {
   User.findOneAndUpdate(
     { _id: req.user._id},
-    { process: {
-      companyID: req.params.companyID,
-      processID: req.params.processID }
+    {$push: { processes: req.params.processID }
     }
   )
     .then((user) => {
