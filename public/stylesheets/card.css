@@ -1,0 +1,33 @@
+#card-container {
+  width: 65vw;
+  height: 50vh;
+  min-height: 350px;
+  min-width: 500px;
+  box-shadow: 1px 1px 5px black;
+}
+
+#alternatives {
+  width: 100%;
+  /* border: 1px solid red; */
+}
+
+.alternative {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  /* border: 1px solid red; */
+  margin: 10px;
+}
+
+.alternative-btn {
+  text-align: center;
+  text-decoration: none;
+  line-height: 2rem;
+  width: 50%;
+  height: 35px;
+  background-color: blueviolet;
+  color: white;
+  border-radius: 5px;
+}
+
