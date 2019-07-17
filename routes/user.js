@@ -6,7 +6,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 const transport = require('../config/mailtrap');
-const { ensureLoggedOut } = require('connect-ensure-login');
+const { ensureLoggedOut, ensureLoggedIn } = require('connect-ensure-login');
 const { uploadCloudUser } = require('../config/cloudinary.js');
 //---------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ function ensureUserLoggedIn() {
 //---------------------------------------------------------------------------
 
 // LOGIN ROUTER
-router.get('/login', ensureLoggedOut('/'), (req, res, next) => {
+router.get('/login', ensureLoggedOut('/user/profile'), (req, res, next) => {
   res.render('user/login');
 });
 
@@ -52,7 +52,7 @@ router.get('/user/logout', (req, res) => {
 //---------------------------------------------------------------------------
 
 // SIGNUP ROUTER
-router.get('/signup', ensureLoggedOut('/'), (req, res, next) => {
+router.get('/signup', ensureLoggedOut('/user/profile'), (req, res, next) => {
   res.render('user/signup');
 });
 
@@ -296,48 +296,35 @@ router.post(
 );
 //---------------------------------------------------------------------------
 
-//DASHBOARD
-router.get('/dashboard', ensureUserLoggedIn(), (req, res, next) => {
-  res.render('user/dashboard');
-});
-//---------------------------------------------------------------------------
-
 // PROFILE ROUTER
-router.get('/profile/:userID', ensureUserLoggedIn(), (req, res, next) => {
-  res.render(`user/profile`, req.user);
+router.get('/profile/:userID', ensureLoggedIn('/'), (req, res, next) => {
+  id = req.params.userID;
+  User.findById(id)
+    .then((user) => {
+      console.log(user)
+      if (String(req.user._id) === id) {
+        res.render('user/profile', {user, flag:true});
+      } else {
+      res.render('user/profile', {user});
+      }
+    })
+    .catch((error) => console.log(error));
 });
 
-router.get('/profile/', ensureUserLoggedIn(), (req, res, next) => {
+router.get('/profile/', ensureLoggedIn('/'), (req, res, next) => {
   res.redirect(`/user/profile/${req.user._id}`);
 });
 //---------------------------------------------------------------------------
 
-router.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/user/login');
-});
-//  ------------------------------------------------------------------
-
-//ACTIVATION CODE
-router.get('/confirmation/company/:companyID/process/:processID', ensureUserLoggedIn(), (req, res, next) => {
-  User.findOneAndUpdate(
-    { _id: req.user._id},
-    {$push: { processes: req.params.processID }
-    }
-  )
-    .then((user) => {
-      if (user) {
-        res.render('user/confirmationCode', {
-          message: `Your account is active! Welcome! -----${req.params.companyID}/${req.params.processID}----${req.user._id}`
-        });
-      } else {
-        res.render('user/confirmationCode', {
-          message: "We didn't find any account for this activation code!"
-        });
-      }
-    })
-    .catch((err) => console.log(err));
+// PROCESS LIST
+router.get('/profile/:userID/processes', ensureLoggedIn('/'), (req, res, next) => {
+  User.findById(req.params.userID).populate('processes')
+  .then(user => res.render('user/processes', user))
+  .catch(error => console.log(error))
 });
 //---------------------------------------------------------------------------
+
+
+
 
 module.exports = router;
