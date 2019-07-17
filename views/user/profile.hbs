@@ -9,8 +9,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src={{imgPath}}
-                        alt="" />
+                    <img src={{user.imgPath}}/>
                     {{!-- <div class="file btn btn-lg btn-primary">
                         Change Photo
                         <input type="file" name="photo" />
@@ -20,10 +19,10 @@
             <div class="col-md-6">
                 <div class="profile-head">
                     <h5>
-                        {{personal.name}} {{personal.lastName}}
+                        {{user.personal.name}} {{user.personal.lastName}}
                     </h5>
                     <h6>
-                        {{experiences.occupation}}
+                        {{user.experiences.occupation}}
                     </h6>
                     <p class="proile-rating">RANKINGS : <span>8/10</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -42,17 +41,18 @@
                     </ul>
                 </div>
             </div>
+            {{#if flag}}
             <div class="col-md-2">
                 <button type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"><a href="/user/cv">Edit Profile</a></button>
             </div>
+            {{/if}}
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-work">
-                    <p>WORK LINK</p>
-                    <a href="">Website Link</a><br />
-                    <a href="">Bootsnipp Profile</a><br />
-                    <a href="">Bootply Profile</a>
+                    <p>MENU</p>
+                    <a href="/user/profile/{{user._id}}/processes">Processes</a><br />
+                    <a href="">Performance</a><br/>
                     <p>SKILLS</p>
                     <a href="">Web Designer</a><br />
                     <a href="">Web Developer</a><br />
@@ -69,7 +69,7 @@
                                 <label>Username</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.username}}</p>
+                                <p>{{user.user.username}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -77,7 +77,7 @@
                                 <label>Full name</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.name}} {{personal.lastName}}</p>
+                                <p>{{user.personal.name}} {{user.personal.lastName}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -85,7 +85,7 @@
                                 <label>Date of Birth</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.dateOfBirth}}</p>
+                                <p>{{user.personal.dateOfBirth}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -93,7 +93,7 @@
                                 <label>Marital Status</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.maritalStatus}}</p>
+                                <p>{{user.personal.maritalStatus}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -101,7 +101,7 @@
                                 <label>CPF</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.cpf}}</p>
+                                <p>{{user.personal.cpf}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -109,7 +109,7 @@
                                 <label>Nationality</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.nationality}}</p>
+                                <p>{{user.personal.nationality}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -117,7 +117,7 @@
                                 <label>Email</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.email}}</p>
+                                <p>{{user.personal.email}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -125,7 +125,7 @@
                                 <label>Phone</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.phone}}</p>
+                                <p>{{user.personal.phone}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -133,7 +133,7 @@
                                 <label>Telephone</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{personal.telephone}}</p>
+                                <p>{{user.personal.telephone}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -141,8 +141,8 @@
                                 <label>Adress</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{adress.street}}, {{adress.number}}, {{adress.district}}, {{adress.city}} -
-                                    {{adress.state}} - {{adress.country}} - {{adress.zipCode}} </p>
+                                <p>{{user.adress.street}}, {{user.adress.number}}, {{user.adress.district}}, {{user.adress.city}} -
+                                    {{user.adress.state}} - {{user.adress.country}} - {{user.adress.zipCode}} </p>
                             </div>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                                 <label>Degree</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{skills.education.degree}}</p>
+                                <p>{{user.skills.education.degree}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -160,7 +160,7 @@
                                 <label>Institution</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{skills.education.institution}}</p>
+                                <p>{{user.skills.education.institution}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -168,7 +168,7 @@
                                 <label>Field of study</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{skills.education.fieldOfStudy}}</p>
+                                <p>{{user.skills.education.fieldOfStudy}}</p>
                             </div>
                         </div>
                         <hr>
@@ -177,7 +177,7 @@
                                 <label>Idiom</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{languages.idiom}}</p>
+                                <p>{{user.languages.idiom}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -185,7 +185,7 @@
                                 <label>Level</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{languages.level}}</p>
+                                <p>{{user.languages.level}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -193,7 +193,7 @@
                                 <label>Period</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{skills.education.period.startDate}} - {{skills.education.period.endDate}}</p>
+                                <p>{{user.skills.education.period.startDate}} - {{user.skills.education.period.endDate}}</p>
                             </div>
                         </div>
                     </div>
@@ -203,7 +203,7 @@
                                 <label>Company Name</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{experiences.companyName}}</p>
+                                <p>{{user.experiences.companyName}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -211,7 +211,7 @@
                                 <label>Occupation</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{experiences.occupation}}</p>
+                                <p>{{user.experiences.occupation}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -219,7 +219,7 @@
                                 <label>Period</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{experiences.period.startDate}} - {{experiences.period.endDate}}</p>
+                                <p>{{user.experiences.period.startDate}} - {{user.experiences.period.endDate}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -227,7 +227,7 @@
                                 <label>Description</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{experiences.description}}</p>
+                                <p>{{user.experiences.description}}</p>
                             </div>
                         </div>
                     </div>

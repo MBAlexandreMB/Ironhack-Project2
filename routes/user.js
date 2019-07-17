@@ -27,7 +27,7 @@ function ensureUserLoggedIn() {
 //---------------------------------------------------------------------------
 
 // LOGIN ROUTER
-router.get('/login', ensureLoggedOut('/'), (req, res, next) => {
+router.get('/login', ensureLoggedOut('/user/profile'), (req, res, next) => {
   res.render('user/login');
 });
 
@@ -39,31 +39,31 @@ router.post(
     failureFlash: true,
     passReqToCallback: true
   })
-  );
-  
-  //---------------------------------------------------------------------------
-  
-  // LOGIN VIA FACEBOOK
-  router.get('/login/facebook', (req, res, next) => {
-    res.render('user/login');
-  });
-  
-  // LOGOUT ROUTER
-  router.get('/user/logout', (req, res) => {
-    req.logout();
-    res.redirect('/user/login');
-  });
-  //---------------------------------------------------------------------------
-  
-  // SIGNUP ROUTER
-  router.get('/signup', ensureLoggedOut('/'), (req, res, next) => {
-    res.render('user/signup');
-  });
-  
-  router.post('/signup', (req, res, next) => {
-    const { username, email, password, confirmPassword } = req.body;
-    
-    User.findOne({ 'personal.email': email })
+);
+
+//---------------------------------------------------------------------------
+
+// LOGIN VIA FACEBOOK
+router.get('/login/facebook', (req, res, next) => {
+  res.render('user/login');
+});
+
+// LOGOUT ROUTER
+router.get('/user/logout', (req, res) => {
+  req.logout();
+  res.redirect('/user/login');
+});
+
+router.get('/signup', ensureLoggedOut('/user/profile'), (req, res, next) => {
+  res.render('user/signup');
+});
+//---------------------------------------------------------------------------
+
+// SIGNUP ROUTER
+router.post('/signup', (req, res, next) => {
+  const { username, email, password, confirmPassword } = req.body;
+
+  User.findOne({ 'personal.email': email })
     .then((user) => {
       if (user) {
         res.render('user/signup', { message: 'Email already registered!' });
@@ -339,10 +339,44 @@ router.post(
                 message: "We didn't find any account for this activation code!"
               });
             }
-          })
-          .catch((err) => console.log(err));
-        });
-        //---------------------------------------------------------------------------
+      })
+      .catch((err) => console.log(err));
+  });
+//---------------------------------------------------------------------------
+
+// PROFILE ROUTER
+router.get('/profile/:userID', ensureLoggedIn('/'), (req, res, next) => {
+  id = req.params.userID;
+  User.findById(id)
+    .then((user) => {
+      console.log(user)
+      if (String(req.user._id) === id) {
+        res.render('user/profile', {user, flag:true});
+      } else {
+      res.render('user/profile', {user});
+      }
+    })
+    .catch((error) => console.log(error));
+});
+
+router.get('/profile/', ensureLoggedIn('/'), (req, res, next) => {
+  res.redirect(`/user/profile/${req.user._id}`);
+});
+//---------------------------------------------------------------------------
+
+// PROCESS LIST
+router.get('/profile/:userID/processes', ensureLoggedIn('/'), (req, res, next) => {
+  User.findById(req.params.userID).populate('processes')
+  .then(user => res.render('user/processes', user))
+  .catch(error => console.log(error))
+});
+//---------------------------------------------------------------------------
+
+
+
+
+module.exports = router;
+
         
         
         
@@ -636,4 +670,3 @@ router.post(
         // });
         
         module.exports = router;
-        
