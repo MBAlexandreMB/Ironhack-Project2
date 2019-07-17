@@ -1,26 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#content {
+  display: flex;
+  justify-content: center;
+  padding-top: 80px; 
+}
+
 #card-container {
   width: 65vw;
-  height: 50vh;
-  min-height: 350px;
+  height: fit-content;
+  max-height: 500px;
+  min-height: 370px;
   min-width: 500px;
-  box-shadow: 1px 1px 5px black;
+  box-shadow: 1px 1px 7px #9D9D9D;
+  padding: 30px 30px 20px;
 }
 
-#alternatives {
+#card-header {
+  display: flex;
+  flex-flow: column nowrap;
+  margin-bottom: 25px;
+}
+
+#card-title-container {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
   width: 100%;
-  /* border: 1px solid red; */
+  font-family: 'Roboto';
 }
 
-.alternative {
+#card-title {
+  flex-grow: 8;
+  font-size: 1.5rem;
+}
+
+#card-time {
+  flex-grow: 2;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+#card-title-line {
+  background-color: blueviolet;
+  height: 5px;
+  width: 40px;
+  margin: 5px 0 20px;
+}
+
+#company-name {
+  font-size: 0.7rem;
+  font-family: 'Roboto';
+  color: #4D4D4D
+}
+
+#question-title {
+  font-size: 1rem;
+  font-family: 'Open Sans';
+}
+
+#card-alternatives {
+  width: 100%;
+}
+
+.card-alternative {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  /* border: 1px solid red; */
   margin: 10px;
 }
 
-.alternative-btn {
+.card-alternative-btn {
   text-align: center;
   text-decoration: none;
   line-height: 2rem;
@@ -30,4 +86,8 @@
   color: white;
   border-radius: 5px;
 }
+
+
+
+
 
