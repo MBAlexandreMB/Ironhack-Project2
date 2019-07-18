@@ -9,6 +9,7 @@ const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const hbs = require('hbs');
 
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true })
@@ -27,10 +28,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hbs');
+hbs.registerPartials(__dirname + '/views/partials');
 app.use(express.static(__dirname + '/public'));
 
 //PASSPORT AND LOGIN. Flash is used for passport error handling
-
 app.use(session({
   secret: "ihp2",
   cookie: { maxAge: 12000000 },
@@ -46,7 +47,6 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 //----------------------------------
 
 app.use('/', require('./routes/index'));
