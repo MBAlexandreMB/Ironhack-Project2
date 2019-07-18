@@ -146,26 +146,26 @@ router.post(
   });
   //---------------------------------------------------------------------------
   
-  //ACTIVATION CODE
-  // router.get('/signup/confirmation/:activationCode', (req, res, next) => {
-  //   User.findOneAndUpdate(
-  //     { activationCode: req.params.activationCode },
-  //     { active: true },
-  //     { new: true }
-  //     )
-  //     .then((user) => {
-  //       if (user) {
-  //         res.render('user/confirmationCode', {
-  //           message: 'Your account is active! Welcome!'
-  //         });
-  //       } else {
-  //         res.render('user/confirmationCode', {
-  //           message: "We didn't find any account for this activation code!"
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => console.log(err));
-  //   });
+  // ACTIVATION CODE
+  router.get('/signup/confirmation/:activationCode', (req, res, next) => {
+    User.findOneAndUpdate(
+      { activationCode: req.params.activationCode },
+      { active: true },
+      { new: true }
+      )
+      .then((user) => {
+        if (user) {
+          res.render('user/confirmationCode', {
+            message: 'Your account is active! Welcome!'
+          });
+        } else {
+          res.render('user/confirmationCode', {
+            message: "We didn't find any account for this activation code!"
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+    });
     //---------------------------------------------------------------------------
     
     // CURRICULUM ROUTER
@@ -325,25 +325,37 @@ router.post(
         });
         //  ------------------------------------------------------------------
         
-        //ACTIVATION CODE
+        //ACTIVATION CODE FOR PROCESSES
         router.get('/confirmation/company/:companyID/process/:processID', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-          User.findOneAndUpdate(
-            { _id: req.user._id},
-            {$push: { processes: req.params.processID }
-          }
-          )
-          .then((user) => {
-            if (user) {
-              res.render('user/confirmationCode', {
-                message: `Your account is active! Welcome!`
-              });
-            } else {
-              res.render('user/confirmationCode', {
-                message: "We didn't find any account for this activation code!"
-              });
+          const getCompany = Company.findById(req.params.companyID);
+          const getProcess = Process.findById(req.params.processID);
+
+          Promise.all([getCompany, getProcess])
+          .then(result => {
+            User.findOneAndUpdate(
+              { _id: req.user._id},
+              {$push: { processes: req.params.processID }
             }
+            )
+            .then((user) => {
+              if (user) {
+                res.render('user/confirmationCode', {
+                  message: `You are enrolled in "${result[0].name} - ${result[1].title}" process!`
+                });
+              } else {
+                res.render('user/confirmationCode', {
+                  message: "We didn't find your account. Are you sure you're logged in?"
+                });
+              }
+            })
+            .catch((err) => console.log(err));
           })
-          .catch((err) => console.log(err));
+          .catch(err => {
+            console.log(err);
+            res.render('user/confirmationCode', {
+              message: "We didn't find any process within this adress!"
+            });
+          });
         });
         //---------------------------------------------------------------------------
         

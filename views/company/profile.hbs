@@ -2,12 +2,16 @@
 
 <a href="/company/profile/credentials">Change password</a>
 <form action="/company/profile/save" method="POST" enctype="multipart/form-data">
+  {{#if username}}
   <label for="name">Username: </label>
   <input type="text" name="name" value="{{username}}" disabled/>
+  {{/if}}
   <label for="name">Name: </label>
   <input type="text" name="name" value="{{name}}" required/>
-  <label>Employer Identification Number:</label> 
+  <label for="ein">Employer Identification Number:</label> 
   <input type="text" name="ein" value="{{ein}}" required/>
+  <label for="email">E-mail:</label> 
+  <input type="text" name="email" value="{{email}}" required/>
   
   {{#if logo}}
     <img id="profile-company-logo" src="{{logo}}" alt="{{name}}'s logo"/>
