@@ -1,10 +1,8 @@
+
+
 img {
   width: 100%;
   height: auto;
-}
-
-body {
-  background: -webkit-linear-gradient(bottom, #ae549b, #884179)
 }
 
 #content {
@@ -20,18 +18,16 @@ body {
   justify-content: space-around;
   align-items: center;
 
-  border-radius: 10px;
-  border: 1px solid #ae549b;
-  background: white;
-  width: 60vw;
-  height: 85vh;
-  box-shadow: 5px 5px 5px #DDD;
+  width: 100vw;
+  height: 80vh;
+  padding-top: 30px;
 }
 
 #auth-container figure { 
   width: 70%;
 }
 
+/* ----------- INDEX ----------*/
 #btn-container {
   width: 100%;
   display: flex;
@@ -42,6 +38,68 @@ body {
 
 
 .link-btn {
-  width: 40%;
+  width: 160px;
+  margin: 10px;
+}
+/* ----------------------------*/
+/* ----------- MEDIAS ----------*/
+#auth-container form {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: center;
+
+  height: 80%;
+  width: 100%;
+}
+
+#auth-container input {
+  margin: 15px;
+  width: 80%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ae549b;
+}
+
+#input-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+#login-btn-container {
+  display: flex;
+  flex-flow: column nowrap;
+
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+/* ----------------------------*/
+/* ----------- MEDIAS ----------*/
+@media (min-width: 600px) {
+  #auth-container {
+    width: 70vw;
+    height: 85vh;
+
+    border-radius: 10px;
+    border: 1px solid #ae549b;
+    background: white;
+    box-shadow: 5px 5px 5px #DDD;
+  }
+
+  body {
+    background: -webkit-linear-gradient(bottom, #ae549b, #884179)
+  }
+}
+
+
+@media (min-width: 1050px) {
+  #auth-container {
+    width: 40vw;
+    height: 85vh;
+  }
 }
 

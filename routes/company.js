@@ -23,7 +23,7 @@ function ensureCompanyLoggedIn() {
 }
 
 router.get('/', (req, res, next) => {
-  res.render('company/index');
+  res.redirect('company/login');
 });
 
 //SIGN UP ROUTES ------------------------------------------------------------------
