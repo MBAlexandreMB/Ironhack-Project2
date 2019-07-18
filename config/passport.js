@@ -61,16 +61,17 @@ passport.use(
 // PASSPORT USER
 passport.use(
   'local-user',
-  new LocalStrategy((username, password, next) => {
+  new LocalStrategy(
+    { passReqToCallback: true },
+    (req, username, password, next) => {
     User.findOne({ 'personal.email': username }, (err, user) => {
       if (err) {
         return next(err);
       }
-      if (!user) {
-        return next(null, false, { message: 'Incorrect username' });
-      }
-      if (!bcrypt.compareSync(password, user.user.password)) {
-        return next(null, false, { message: 'Incorrect password' });
+      if (!user || !bcrypt.compareSync(password, user.user.password)) {
+        return next(null, false, {
+          message: 'Incorrect username or password'
+        });
       }
 
       if (!user.active) {

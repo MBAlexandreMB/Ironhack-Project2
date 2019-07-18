@@ -343,7 +343,6 @@ router.get('/processes/show/:processId', ensureLoggedIn('/'), (req, res, next) =
           }
         }
       })
-      console.log(questionArr);
       result[1].categories.forEach(category => {
         catQuestRel.push([category.name, []]);
         questionArr.forEach(question => {
