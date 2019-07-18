@@ -147,25 +147,25 @@ router.post(
   //---------------------------------------------------------------------------
   
   //ACTIVATION CODE
-  // router.get('/signup/confirmation/:activationCode', (req, res, next) => {
-  //   User.findOneAndUpdate(
-  //     { activationCode: req.params.activationCode },
-  //     { active: true },
-  //     { new: true }
-  //     )
-  //     .then((user) => {
-  //       if (user) {
-  //         res.render('user/confirmationCode', {
-  //           message: 'Your account is active! Welcome!'
-  //         });
-  //       } else {
-  //         res.render('user/confirmationCode', {
-  //           message: "We didn't find any account for this activation code!"
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => console.log(err));
-  //   });
+  router.get('/signup/confirmation/:activationCode', (req, res, next) => {
+    User.findOneAndUpdate(
+      { activationCode: req.params.activationCode },
+      { active: true },
+      { new: true }
+      )
+      .then((user) => {
+        if (user) {
+          res.render('user/confirmationCode', {
+            message: 'Your account is active! Welcome!'
+          });
+        } else {
+          res.render('user/confirmationCode', {
+            message: "We didn't find any account for this activation code!"
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+    });
     //---------------------------------------------------------------------------
     
     // CURRICULUM ROUTER
