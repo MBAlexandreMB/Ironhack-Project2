@@ -45,14 +45,16 @@
             <div class="col-md-2">
                 <button type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"><a href="/user/cv">Edit Profile</a></button>
             </div>
+            {{/if}}
             
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-work">
                     <p>MENU</p>
+                    {{#if flag}}
                     <a href="/user/profile/{{user._id}}/processes">Processes</a><br />
-
+                    {{/if}}
                     <a href="/user/profile/{{user._id}}/performance">Performance</a><br/>
 
                     {{!-- <a href="">Performance</a><br/>
@@ -65,7 +67,7 @@
                     <a href="">PHP, .Net</a><br /> --}}
                 </div>
             </div>
-            {{/if}}
+
             <div class="col-md-8">
                 <div class="tab-content profile-tab" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
