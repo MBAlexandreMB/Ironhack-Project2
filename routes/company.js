@@ -11,6 +11,7 @@ const Process = require('../models/process');
 const User = require('../models/user');
 const Questions = require('../models/questions');
 
+
 function ensureCompanyLoggedIn() {
   return function(req, res, next) {
     if (req.isAuthenticated() && req.user.ein) {
@@ -142,9 +143,15 @@ router.post("/login", passport.authenticate("local-company", {
   passReqToCallback: true
 }));
 
-// router.get('/auth/linkedin', (req, res, next) => {
-//   res.send('linkedin');
-// });
+router.get('/auth/linkedin',
+  passport.authenticate('linkedin'),
+  function(req, res){
+  });
+
+router.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
+  successRedirect: '/company/dashboard',
+  failureRedirect: '/company/login'
+}));
 
 router.get("/logout", (req, res) => {
   req.logout();

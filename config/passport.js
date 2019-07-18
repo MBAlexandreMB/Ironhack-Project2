@@ -2,6 +2,7 @@ const passport = require('passport');
 const User = require('../models/user');
 const Company = require('../models/company');
 const LocalStrategy = require('passport-local').Strategy;
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 const bcrypt = require('bcrypt');
 
 //PASSPORT COMPANY
@@ -79,6 +80,32 @@ passport.use(
       }
   
       return next(null, user);
+    });
+  }));
+
+  passport.use(new LinkedInStrategy({
+    clientID: process.env.LINKEDIN_CLIENTID,
+    clientSecret: process.env.LINKEDIN_SECRET,
+    callbackURL: `${process.env.baseURL}/company/auth/linkedin/callback`,
+    scope: ['r_emailaddress', 'r_liteprofile'],
+    state: true,
+  }, function(accessToken, refreshToken, profile, done) {
+      Company.find({linkedinId: profile.id}, (err, user) => {
+        if(user) {
+          return done(err, user);
+        }
+
+        Company.create({linkedinId: profile.id}, (err, user) => {
+          return done(err, user);
+        })
+      });
+    process.nextTick(function () {
+     
+      // To keep the example simple, the user's LinkedIn profile is returned to
+      // represent the logged-in user. In a typical application, you would want
+      // to associate the LinkedIn account with a user record in your database,
+      // and return that user instead.
+      return done(null, profile);
     });
   }));
 
