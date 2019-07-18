@@ -43,11 +43,6 @@ router.post(
 
 //---------------------------------------------------------------------------
 
-// LOGIN VIA FACEBOOK
-router.get('/login/facebook', (req, res, next) => {
-  res.render('user/login');
-});
-
 // LOGOUT ROUTER
 router.get('/user/logout', (req, res) => {
   req.logout();
