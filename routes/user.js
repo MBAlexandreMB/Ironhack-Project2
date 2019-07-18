@@ -306,14 +306,14 @@ router.post('/signup', (req, res, next) => {
         });
         //---------------------------------------------------------------------------
         
-        // PROFILE ROUTER
-        router.get('/profile/:userID', ensureUserLoggedIn(), (req, res, next) => {
-          res.render(`user/profile`, req.user);
-        });
+        // // PROFILE ROUTER
+        // // router.get('/profile/:userID', ensureUserLoggedIn(), (req, res, next) => {
+        // //   res.render(`user/profile`, req.user);
+        // // });
         
-        router.get('/profile/', ensureUserLoggedIn(), (req, res, next) => {
-          res.redirect(`/user/profile/${req.user._id}`);
-        });
+        // // router.get('/profile/', ensureUserLoggedIn(), (req, res, next) => {
+        // //   res.redirect(`/user/profile/${req.user._id}`);
+        // // });
         //---------------------------------------------------------------------------
         
         router.get('/logout', (req, res) => {
@@ -347,6 +347,7 @@ router.post('/signup', (req, res, next) => {
 // PROFILE ROUTER
 router.get('/profile/:userID', ensureLoggedIn('/'), (req, res, next) => {
   id = req.params.userID;
+  console.log(id)
   User.findById(id)
     .then((user) => {
       console.log(user)
@@ -368,6 +369,27 @@ router.get('/profile/', ensureLoggedIn('/'), (req, res, next) => {
 router.get('/profile/:userID/processes', ensureLoggedIn('/'), (req, res, next) => {
   User.findById(req.params.userID).populate('processes')
   .then(user => res.render('user/processes', user))
+  .catch(error => console.log(error))
+});
+//---------------------------------------------------------------------------
+
+// PERFORMANCE LIST
+router.get('/profile/:userID/performance', ensureLoggedIn('/'), (req, res, next) => {
+  User.findById(req.params.userID).populate('questions')
+  .then(user => {
+  let totalQuestions = user.questions.length;
+  let correctAnswers = user.questions.reduce((total, question) => {
+    if(question.statusAnswer) {
+    return total += 1
+    }
+  });
+  let categoryArray = user.questions.map((element) => {
+    return element.question;
+  });
+  Questions.find({_id: {$in: categoryArray}})
+  .then(category => res.render('user/performance', category))
+  .catch(error => console.log(error))
+})
   .catch(error => console.log(error))
 });
 //---------------------------------------------------------------------------
