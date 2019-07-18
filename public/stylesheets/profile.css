@@ -1,5 +1,5 @@
 body{
-    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    background: -webkit-linear-gradient(left, #ae549b, #d69dca);
 }
 .emp-profile{
     padding: 3%;
@@ -35,7 +35,7 @@ body{
     color: #333;
 }
 .profile-head h6{
-    color: #0062cc;
+    color: #ae549b;
 }
 .profile-edit-btn{
     border: none;
@@ -65,7 +65,7 @@ body{
 }
 .profile-head .nav-tabs .nav-link.active{
     border: none;
-    border-bottom:2px solid #0062cc;
+    border-bottom:2px solid #ae549b;
 }
 .profile-work{
     padding: 14%;
@@ -91,5 +91,22 @@ body{
 }
 .profile-tab p{
     font-weight: 600;
-    color: #0062cc;
+    color: #ae549b;
+}
+
+a {
+    color: #ae549b !important;
+}
+
+#save {
+    background-color: #ae549b !important;
+    border: #ae549b !important;
+}
+
+.col-md-6 {
+    padding: 05px
+}
+
+#myTabContent {
+    margin-top: 
 }

@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto&display=swap');
+
+.wb {
+  background-color: #fff;
+  border: 2px solid #ae549b; 
+  color: #ae549b;
+}
+
+.pb {
+  background-color: #ae549b;
+  color: #fff;
+}
+
+.wb:hover {
+  background-color: #ae549b;
+  color: #fff;
+}
+
+.pb:hover {
+  background-color: #fff;
+  border: 2px solid #ae549b; 
+  color: #ae549b;
+}
+
+.link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+  padding: 20px 20px;
+  font-size: 1rem;
+  box-shadow: 5px 5px 5px #DDD;
+}
+
+.link-btn:hover {
+  text-decoration: none;
+}

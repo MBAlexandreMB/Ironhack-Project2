@@ -1,14 +1,22 @@
-<form action="/company/login" method="POST">
-  <label for="username">Username, e-mail or Employer Identification Number: </label>
-  <input type="text" name="username" required/>
-  <label for="password">Password: </label>
-  <input type="password" name="password" required/>
-  <button type="submit">Login</button>
+<link rel="stylesheet" href="/stylesheets/authStyles.css">
+  <div id="content"> 
+    <div id="auth-container"> 
+      <figure>
+        <img src="/images/purplese-logo-original.png" />
+      </figure>
+    <form action="/company/login" method="POST">
+    <div id="input-container">
+      <input type="text" name="username" placeholder="Username, e-mail or Employer Identification Number" required/>
+      <input type="password" name="password" placeholder="********" required/>
+    </div>
+    <div id="login-btn-container">
+      <input class="link-btn pb" type="submit" value="Login" />
+      <a href="/company/auth/linkedin"><img src="/images/signin_with_linkedin-buttons/Non-Retina/Sign-in-Large---Default.png"></a>
+    </div>
 
-
-  {{!-- <a href="/company/auth/linkedin">Linkedin Login</a> --}}
-
-  {{#if message}}
-    <div class="error-message">{{ message }}</div>
-  {{/if}}
-</form>
+    {{#if message}}
+      <div class="error-message">{{ message }}</div>
+    {{/if}}
+  </form>
+  </div>
+</div>

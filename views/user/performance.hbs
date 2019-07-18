@@ -1,0 +1,12 @@
+{{#if user.personal.name}}
+<h1>{{user.personal.name}} {{user.personal.lastName}}'s performance:</h1>
+{{else}}
+<h1>{{user.user.username}}'s performance:</h1>
+{{/if}}
+<ul>
+  {{#each performance}}
+  <li>{{name}}: {{percentage}}</li>
+  {{/each}}
+</ul>
+
+<a href="/user/profile/{{user._id}}">Back to profile</a>
