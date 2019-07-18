@@ -65,15 +65,11 @@
 }
 
 #card-alternatives {
-  width: 100%;
-}
-
-.card-alternative {
   display: flex;
-  align-items: center;
+  flex-flow: column nowrap;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  margin: 10px;
 }
 
 .card-alternative-btn {
@@ -85,6 +81,7 @@
   background-color: blueviolet;
   color: white;
   border-radius: 5px;
+  margin-bottom: 5px;
 }
 
 

@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
   <div id="card-container">
+    <p id="questionId" hidden></p>
     <div id="card-header">
       <div id="card-title-container">
-        <div id="card-title">{{process.title}} - {{category.name}}</div><div id="card-time">00:30</div>
+        <div id="card-title"></div><div id="card-time"></div>
       </div>
-      <p id="company-name">{{company.name}}</p>
+      <p id="company-name"></p>
       <div id="card-title-line"></div>
-      {{#with question}}
-      <p id="question-title">{{title}}</p>
+      <p id="question-title"></p>
     </div>    
-    <button id="card-alternatives">
-      <button class="card-alternative-btn" href="">{{alternative.[0]}}</button>
-      <button class="card-alternative-btn" href="">{{alternative.[1]}}</button>
-      <button class="card-alternative-btn" href="">{{alternative.[2]}}</button>
-      <button class="card-alternative-btn" href="">{{alternative.[3]}}</button>
-      <button class="card-alternative-btn" href="">{{alternative.[4]}}</button>
+    <div id="card-alternatives">
+      <button id="answer-btn0" class="card-alternative-btn" ></button>
+      <button id="answer-btn1" class="card-alternative-btn" ></button>
+      <button id="answer-btn2" class="card-alternative-btn" ></button>
+      <button id="answer-btn3" class="card-alternative-btn" ></button>
+      <button id="answer-btn4" class="card-alternative-btn" ></button>
     </div>
-  </div> 
-</body>
-</html>
+</div>
+
