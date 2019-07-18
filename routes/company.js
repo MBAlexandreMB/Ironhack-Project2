@@ -11,9 +11,10 @@ const Process = require('../models/process');
 const User = require('../models/user');
 const Questions = require('../models/questions');
 
+
 function ensureCompanyLoggedIn() {
   return function(req, res, next) {
-    if (req.isAuthenticated() && req.user.ein) {
+    if (req.isAuthenticated() && (req.user.ein || req.user.linkedinId)) {
       return next();
     } else {
       res.redirect('/company/login');
@@ -22,7 +23,7 @@ function ensureCompanyLoggedIn() {
 }
 
 router.get('/', (req, res, next) => {
-  res.render('company/index');
+  res.redirect('company/login');
 });
 
 //SIGN UP ROUTES ------------------------------------------------------------------
@@ -142,9 +143,15 @@ router.post("/login", passport.authenticate("local-company", {
   passReqToCallback: true
 }));
 
-// router.get('/auth/linkedin', (req, res, next) => {
-//   res.send('linkedin');
-// });
+router.get('/auth/linkedin',
+  passport.authenticate('linkedin'),
+  function(req, res){
+  });
+
+router.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
+  successRedirect: '/company/dashboard',
+  failureRedirect: '/company/login'
+}));
 
 router.get("/logout", (req, res) => {
   req.logout();
@@ -154,14 +161,14 @@ router.get("/logout", (req, res) => {
 
 //DASHBOARD
 router.get('/dashboard', ensureCompanyLoggedIn(), (req, res, next) => {
-  res.render('company/dashboard');
+  res.render('company/dashboard', {company: req.user});
 });
 //  ------------------------------------------------------------------
 
 //PROFILE ------------------------------------------------------------------
 router.get('/profile', ensureCompanyLoggedIn(), (req, res, next) => {
   Company.findById(req.user._id)
-  .then(company => res.render('company/profile', company))
+  .then(company => res.render('company/profile', {company: company}))
   .catch(err => console.log(err));
 });
 
@@ -170,7 +177,7 @@ ensureCompanyLoggedIn(),
 uploadCloudCompany.single('logo'), 
 (req, res, next) => {
   let logo = undefined;
-  const {name, ein, street, number, district, city, state, country} = req.body;
+  const {name, ein, email, street, number, district, city, state, country} = req.body;
   
   if(req.file) {
     logo = req.file.secure_url;
@@ -180,6 +187,7 @@ uploadCloudCompany.single('logo'),
   Company.findOneAndUpdate({_id: req.user._id}, {$set: {
     name, 
     ein, 
+    email,
     'address.street': street,
     'address.number': number,
     'address.district': district,
@@ -200,14 +208,14 @@ uploadCloudCompany.single('logo'),
 });
 
 router.get('/profile/credentials', ensureCompanyLoggedIn(), (req, res, next) => {
-  res.render('company/passChange');
+  res.render('company/passChange', {company: req.user});
 });
 
 router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, next) => {
   const {password, rptPassword, oldPassword} = req.body;
   
   if(password !== rptPassword) {
-    res.render('company/passChange', { 
+    res.render('company/passChange', { company: req.user, 
       errorMessage: "Your password and your password confirmation don't match. Please, be sure they're equal." 
     })
     return;
@@ -216,7 +224,7 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
   Company.findById(req.user._id)
   .then(company => {
     if(!bcrypt.compareSync(oldPassword, company.password)) {
-      res.render('company/passChange', { 
+      res.render('company/passChange', { company: req.user, 
         errorMessage: "Wrong current password!" 
       })
       return;
@@ -226,7 +234,7 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
     
     Company.findOneAndUpdate({_id: req.user._id}, {password: hash})
     .then(() => {
-      res.render('company/passChange', {
+      res.render('company/passChange', { company: req.user,
         successMessage: "Password changed!"
       })
     })
@@ -246,7 +254,7 @@ router.get('/processes', ensureCompanyLoggedIn(), (req, res, next) => {
 });
 
 router.get('/processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
-  res.render('company/newProcess');
+  res.render('company/newProcess', {company: req.user});
 });
 
 router.post('/processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
@@ -313,6 +321,7 @@ router.get('/processes/new/getSubByIdCategory/:categoryId',
 });
 
 router.get('/processes/show/:processId', ensureLoggedIn('/'), (req, res, next) => {
+  console.log('--------------------------')
   const link = `${process.env.baseURL}/user/confirmation/company/${req.user._id}/process/${req.params.processId}`;
 
   const getUsers = User.find({processes: req.params.processId});

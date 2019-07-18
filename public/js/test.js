@@ -5,7 +5,6 @@ const setCard = (card) => {
   const buttons = document.getElementsByClassName('card-alternative-btn');
 
   if (card.user) {
-    console.log(card);
     document.getElementById('card-title').innerHTML = `There is no questions left to answer!`;
     document.getElementById('card-time').innerHTML = `<a href="/user/profile/${card._id}/processes">Back to processes</a>`;
 
@@ -29,12 +28,10 @@ const setCard = (card) => {
     document.getElementById('answer-btn4').innerHTML = card.alternatives[4];
   }
 
-
-  
   for(let x = 0; x < buttons.length; x += 1){
-    buttons[x].addEventListener('click', (e) => {
+    buttons[x].onmouseup = (e) => {
       saveAnswer(e);
-    });
+    };
   }
 }
 
@@ -58,7 +55,6 @@ const saveAnswer = (event) => {
 
   axios.post(`${baseURL}/user/process/test/saveAnswer?answer=${answer}&question=${question}`)
   .then((res) => {
-    console.log(res);
     getACard();
   })
   .catch(err => console.log(err));
