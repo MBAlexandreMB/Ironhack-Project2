@@ -1,0 +1,47 @@
+img {
+  width: 100%;
+  height: auto;
+}
+
+body {
+  background: -webkit-linear-gradient(bottom, #ae549b, #884179)
+}
+
+#content {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#auth-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: center;
+
+  border-radius: 10px;
+  border: 1px solid #ae549b;
+  background: white;
+  width: 60vw;
+  height: 85vh;
+  box-shadow: 5px 5px 5px #DDD;
+}
+
+#auth-container figure { 
+  width: 70%;
+}
+
+#btn-container {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+
+  justify-content: space-around;
+}
+
+
+.link-btn {
+  width: 40%;
+}
+
