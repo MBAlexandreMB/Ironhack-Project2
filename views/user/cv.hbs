@@ -1,61 +1,4 @@
-<form action="/user/cv" method="POST" enctype="multipart/form-data">
-    <label for="">Facebook</label>
-    <input type="url" name="facebook" value="{{personal.socialMedia.facebook}}">
-    <label for="">linkedin</label>
-    <input type="url" name="linkedin" value="{{personal.socialMedia.linkedin}}">
-    <label for="">Website/portifolio</label>
-    <input type="url" name="sitePortifolio" value="{{personal.socialMedia.sitePortifolio}}">
-
-
-    <label for="">Professional resume</label>
-    
-
-    <label for="">Education</label>
-    <label for="">Degree</label>
-    <input type="text" name="degree" value="{{skills.education.degree}}">
-    <label for="">Institution</label>
-    <input type="text" name="institution" value="{{skills.education.institution}}">
-    <label for="">Field of study</label>
-    <input type="text" name="fieldOfStudy" value="{{skills.education.fieldOfStudy}}">
-    <label for="">Start Date</label>
-    <input type="date" name="educationStartDate" value="{{skills.education.period.startDate}}">
-    <label for="">End Date</label>
-    <input type="date" name="educationEndDate" value="{{skills.education.period.endDate}}">
-
-    <label for="">Languages</label>
-    <label for="">Idiom</label>
-    <input type="text" name="idiom" value="{{languages.idiom}}">
-    <label for="" name="">level</label>
-    <input type="text" name="level" value="{{languages.level}}">
-
-    <label for="" name="">Professional experince</label>
-    <label for="" name="">Company name</label>
-    <input type="text" name="companyName" value="{{experiences.companyName}}">
-    <label for="" name="">Occupation</label>
-    <input type="text" name="occupation" value="{{experiences.occupation}}">
-    <label for="" name="">Start date</label>
-    <input type="date" name="experienceStartDate" value="{{experiences.period.startDate}}">
-    <label for="" name="">End date</label>
-    <input type="date" name="experienceEndDate" value="{{experiences.period.endDate}}">
-    <label for="" name="">Description</label>
-    <input type="text" name="description" value="{{experiences.description}}">
-
-    <label for="" name="">Username</label>
-    <input type="text" name="username" value="{{user.username}}">
-
-    <label for="" name="">Password</label>
-    <input type="password" name="password">
-
-    <label for="" name="">Confirm password</label>
-    <input type="password" name="ConfirmPassword">
-
-
-    <button type="submit">Save</button>
-
-    {{message}}
-</form>
-
-
+{{message}}
 <script>
     window.onload = () => {
         switch (document.getElementById('msHidden').value) {
@@ -72,19 +15,18 @@
 
     }
 </script>
-
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" href="/stylesheets/profile.css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
+
 
 <div class="container emp-profile">
-    <form method="post" action="/user/profile" enctype="multipart/form-data">
+    <form method="POST" action="/user/cv" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src={{user.imgPath}} alt="">
+                    <img src="{{imgPath}}" >
                     <div class="file btn btn-lg btn-primary">
                         Change Photo
                         <input type="file" name="photo">
@@ -93,13 +35,6 @@
             </div>
             <div class="col-md-6">
                 <div class="profile-head">
-                    <h5>
-                        {{user.personal.name}} {{user.personal.lastName}}
-                    </h5>
-                    <h6>
-                        {{user.experiences.occupation}}
-                    </h6>
-                    <p class="proile-rating">RANKINGS : <span>8/10</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
@@ -113,29 +48,16 @@
                             <a class="nav-link" id="experiences-tab" data-toggle="tab" href="#experiences" role="tab"
                                 aria-controls="experiences" aria-selected="false">Experiences</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="socialMedia-tab" data-toggle="tab" href="#socialMedia" role="tab"
+                                aria-controls="socialMedia" aria-selected="false">Social Media</a>
+                        </li>
                     </ul>
                 </div>
             </div>
-            {{#if flag}}
-            <div class="col-md-2">
-                <button type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"><a
-                        href="/user/cv">Edit Profile</a></button>
-            </div>
-            {{/if}}
         </div>
         <div class="row">
             <div class="col-md-4">
-                <div class="profile-work">
-                    <p>MENU</p>
-                    <a href="/user/profile/{{user._id}}/processes">Processes</a><br />
-                    <a href="/user/profile/{{user._id}}/performance">Performance</a><br />
-                    <p>SKILLS</p>
-                    <a href="">Web Designer</a><br />
-                    <a href="">Web Developer</a><br />
-                    <a href="">WordPress</a><br />
-                    <a href="">WooCommerce</a><br />
-                    <a href="">PHP, .Net</a><br />
-                </div>
             </div>
             <div class="col-md-8">
                 <div class="tab-content profile-tab" id="myTabContent">
@@ -144,8 +66,9 @@
                             <div class="col-md-6">
                                 <label>Username</label>
                             </div>
+                            <hr>
                             <div class="col-md-6">
-                                <p>{{user.user.username}}</p>
+                                <p>{{user.username}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -185,7 +108,7 @@
                                 <label>CPF</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="cpf" value="{{personal.cpf}}">
+                                <input disabled class="form-control" type="text" name="cpf" value="{{personal.cpf}}">
                             </div>
                         </div>
                         <div class="row">
@@ -259,7 +182,7 @@
                                 <label>State</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="state" value="{{adress.state}}">
+                                <input class="form-control" type="text" name="state" value="{{adress.state}}">
                             </div>
                         </div>
                         <div class="row">
@@ -267,14 +190,16 @@
                                 <label>Country</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="country" value="{{adress.country}}"> </div>
+                                <input class="form-control" type="text" name="country" value="{{adress.country}}">
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Zip code</label>
                             </div>
                             <div class="col-md-6">
-<input type="number" name="zipCode" value="{{adress.zipCode}}">                            </div>
+                                <input class="form-control" type="number" name="zipCode" value="{{adress.zipCode}}">
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="education" role="tabpanel" aria-labelledby="education-tab">
@@ -283,15 +208,16 @@
                                 <label>Degree</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.skills.education.degree}}</p>
-                            </div>
+                                <input class="form-control" type="text" name="degree"
+                                    value="{{skills.education.degree}}"> </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Institution</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.skills.education.institution}}</p>
+                                <input class="form-control" type="text" name="institution"
+                                    value="{{skills.education.institution}}">
                             </div>
                         </div>
                         <div class="row">
@@ -299,7 +225,20 @@
                                 <label>Field of study</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.skills.education.fieldOfStudy}}</p>
+                                <input class="form-control" type="text" name="fieldOfStudy"
+                                    value="{{skills.education.fieldOfStudy}}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Period</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="date" name="educationstartDate"
+                                    value="{{skills.education.period.startDate}}">
+                                <input class="form-control" type="date" name="educationEndDate"
+                                    value="{{skills.education.period.endDate}}">
+
                             </div>
                         </div>
                         <hr>
@@ -308,7 +247,8 @@
                                 <label>Idiom</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.languages.idiom}}</p>
+                                <input class="form-control" type="text" name="idiom" value="{{languages.idiom}}">
+
                             </div>
                         </div>
                         <div class="row">
@@ -316,16 +256,7 @@
                                 <label>Level</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.languages.level}}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Period</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>{{user.skills.education.period.startDate}} - {{user.skills.education.period.endDate}}
-                                </p>
+                                <input class="form-control" type="text" name="level" value="{{languages.level}}">
                             </div>
                         </div>
                     </div>
@@ -335,7 +266,8 @@
                                 <label>Company Name</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.experiences.companyName}}</p>
+                                <input class="form-control" type="text" name="companyName"
+                                    value="{{experiences.companyName}}">
                             </div>
                         </div>
                         <div class="row">
@@ -343,7 +275,8 @@
                                 <label>Occupation</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.experiences.occupation}}</p>
+                                <input class="form-control" type="text" name="occupation"
+                                    value="{{experiences.occupation}}">
                             </div>
                         </div>
                         <div class="row">
@@ -351,7 +284,9 @@
                                 <label>Period</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.experiences.period.startDate}} - {{user.experiences.period.endDate}}</p>
+                                <input class="form-control" type="date" name="experienceStartDate"
+                                    value="{{experiences.period.startDate}}"> <input class="form-control" type="date"
+                                    name="experienceEndDate" value="{{experiences.period.endDate}}">
                             </div>
                         </div>
                         <div class="row">
@@ -359,12 +294,44 @@
                                 <label>Description</label>
                             </div>
                             <div class="col-md-6">
-                                <p>{{user.experiences.description}}</p>
+                                <input class="form-control" type="text" name="description"
+                                    value="{{experiences.description}}">
+
                             </div>
                         </div>
+                    </div>
+                    <div class="tab-pane fade" id="socialMedia" role="tabpanel" aria-labelledby="socialMedia-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Facebook</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="url" name="facebook" value="{{personal.socialMedia.facebook}}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>LinkedIn</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="url" name="linkedin" value="{{personal.socialMedia.linkedin}}">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Website</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="url" name="sitePortifolio" value="{{personal.socialMedia.sitePortifolio}}">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
+
+        <button id="save" class="btn btn-primary" type="submit">Save</button>
     </form>
 </div>
