@@ -17,7 +17,6 @@ const Process = require('../models/process');
 //LOGIN VERIFICATION
 function ensureUserLoggedIn() {
   return function(req, res, next) {
-    console.log(req);
     if (req.isAuthenticated() && !req.user.ein) {
       return next();
     } else {
@@ -40,579 +39,599 @@ router.post(
     failureFlash: true,
     passReqToCallback: true
   })
-  );
-  
-  //---------------------------------------------------------------------------
-  
-  // LOGIN VIA FACEBOOK
-  router.get('/login/facebook', (req, res, next) => {
-    res.render('user/login');
-  });
-  
-  // LOGOUT ROUTER
-  router.get('/user/logout', (req, res) => {
-    req.logout();
-    res.redirect('/user/login');
-  });
-  
-  router.get('/signup', ensureLoggedOut('/user/profile'), (req, res, next) => {
-    res.render('user/signup');
-  });
-  //---------------------------------------------------------------------------
-  
-  // SIGNUP ROUTER
-  router.post('/signup', (req, res, next) => {
-    const { username, email, password, confirmPassword } = req.body;
-    
-    User.findOne({ 'personal.email': email })
+);
+
+//---------------------------------------------------------------------------
+
+// LOGIN VIA FACEBOOK
+router.get('/login/facebook', (req, res, next) => {
+  res.render('user/login');
+});
+
+// LOGOUT ROUTER
+router.get('/user/logout', (req, res) => {
+  req.logout();
+  res.redirect('/user/login');
+});
+
+router.get('/signup', ensureLoggedOut('/user/profile'), (req, res, next) => {
+  res.render('user/signup');
+});
+//---------------------------------------------------------------------------
+
+// SIGNUP ROUTER
+router.post('/signup', (req, res, next) => {
+  const { username, cpf, email, password, confirmPassword } = req.body;
+
+  User.findOne({ 'personal.email': email })
     .then((user) => {
       if (user) {
         res.render('user/signup', { message: 'Email already registered!' });
         return;
       }
-      
+
       User.findOne({ 'user.username': username })
-      .then((user) => {
-        if (user) {
-          res.render('user/signup', {
-            message: 'The username already exists'
-          });
-          return;
-        }
-        
-        let hashPass = '';
-        
-        if (password !== confirmPassword) {
-          res.render('user/signup', {
-            essage:
-            "Your password and your password confirmation don't match. Please, be sure they're equal."
-          });
-          return;
-        } else {
-          const salt = bcrypt.genSaltSync(bcryptSalt);
-          hashPass = bcrypt.hashSync(password, salt);
-          activationCode = bcrypt
-          .hashSync(email, salt)
-          .match(/[A-Za-z1-9]/g)
-          .join('');
-        }
-        
-        const newUser = new User({
-          user: {
-            username: username,
-            password: hashPass
-          },
-          personal: {
-            email: email
-          },
-          activationCode: activationCode
-        });
-        
-        newUser.save((err) => {
-          if (err) {
-            res.render('user/signup', { message: 'Something went wrong' });
-          } else {
-            res.redirect('/user/cv');
-            
-            transport
-            .sendMail({
-              from: 'register@ihp2.com',
-              to: email,
-              subject: 'IHP2 - Register',
-              text: `Follow this link to activate your account: 
+        .then((user) => {
+          if (user) {
+            res.render('user/signup', {
+              message: 'The username already exists'
+            });
+            return;
+          }
+          User.findOne({ 'personal.cpf': cpf })
+            .then((user) => {
+              if (user) {
+                res.render('user/cv', { message: 'CPF already registered!' });
+                return;
+              }
+
+              let hashPass = '';
+
+              if (password !== confirmPassword) {
+                res.render('user/signup', {
+                  essage:
+                    "Your password and your password confirmation don't match. Please, be sure they're equal."
+                });
+                return;
+              } else {
+                const salt = bcrypt.genSaltSync(bcryptSalt);
+                hashPass = bcrypt.hashSync(password, salt);
+                activationCode = bcrypt
+                  .hashSync(email, salt)
+                  .match(/[A-Za-z1-9]/g)
+                  .join('');
+              }
+
+              const newUser = new User({
+                user: {
+                  username: username,
+                  password: hashPass
+                },
+                personal: {
+                  email: email,
+                  cpf: cpf
+                },
+                activationCode: activationCode
+              });
+
+              newUser.save((err) => {
+                if (err) {
+                  res.render('user/signup', {
+                    message: 'Something went wrong'
+                  });
+                } else {
+                  res.redirect('/user/cv');
+
+                  transport
+                    .sendMail({
+                      from: 'register@ihp2.com',
+                      to: email,
+                      subject: 'IHP2 - Register',
+                      text: `Follow this link to activate your account: 
               ${
                 process.env.baseURL
               }/user/signup/confirmation/${activationCode}`,
-              html: `<a href="${
-                process.env.baseURL
-              }/user/signup/confirmation/${activationCode}">Click here</a> 
+                      html: `<a href="${
+                        process.env.baseURL
+                      }/user/signup/confirmation/${activationCode}">Click here</a> 
               to activate your account!`
-            })
-            .then(() => res.redirect('/user/login'))
-            .catch((err) => {
-              res.render('user/signup', {
-                message: 'Confirmation e-mail not sent!'
+                    })
+                    .then(() => res.redirect('/user/login'))
+                    .catch((err) => {
+                      res.render('user/signup', {
+                        message: 'Confirmation e-mail not sent!'
+                      });
+                      console.log(err);
+                    });
+                }
               });
-              console.log(err);
+            })
+            .catch((error) => {
+              next(error);
             });
-          }
-        });
-      })
-      .catch((error) => {
-        next(error);
-      });
+        })
+        .catch((error) => console.log(error));
     })
     .catch((error) => console.log(error));
-  });
-  //---------------------------------------------------------------------------
-  
-  //ACTIVATION CODE
-  router.get('/signup/confirmation/:activationCode', (req, res, next) => {
+});
+//---------------------------------------------------------------------------
+
+//ACTIVATION CODE
+router.get('/signup/confirmation/:activationCode', (req, res, next) => {
+  User.findOneAndUpdate(
+    { activationCode: req.params.activationCode },
+    { active: true },
+    { new: true }
+  )
+    .then((user) => {
+      if (user) {
+        res.render('user/confirmationCode', {
+          message: 'Your account is active! Welcome!'
+        });
+      } else {
+        res.render('user/confirmationCode', {
+          message: "We didn't find any account for this activation code!"
+        });
+      }
+    })
+    .catch((err) => console.log(err));
+});
+//---------------------------------------------------------------------------
+
+// CURRICULUM ROUTER
+router.get('/cv', ensureUserLoggedIn('/user/login'), (req, res, next) => {
+  console.log(req.user.imgPath);
+  res.render('user/cv', { user: req.user });
+});
+
+router.post(
+  '/cv',
+  uploadCloudUser.single('photo'),
+  ensureUserLoggedIn(),
+  (req, res, next) => {
+    const {
+      name,
+      lastName,
+      dateOfBirth,
+      maritalStatus,
+      cpf,
+      email,
+      phone,
+      telephone,
+      linkedin,
+      facebook,
+      sitePortifolio,
+      nationality,
+      street,
+      number,
+      district,
+      city,
+      state,
+      country,
+      zipCode,
+      professionalResume,
+      degree,
+      institution,
+      fieldOfStudy,
+      educationStartDate,
+      educationEndDate,
+      idiom,
+      level,
+      companyName,
+      occupation,
+      experienceStartDate,
+      experienceEndDate,
+      description
+    } = req.body;
+
+    let imgPath = undefined;
+    if (req.file) {
+      imgPath = req.file.secure_url;
+    }
+
+    const cv = {
+      personal: {
+        name: name,
+        lastName: lastName,
+        dateOfBirth: dateOfBirth,
+        maritalStatus: maritalStatus,
+        nationality: nationality,
+        email: email,
+        phone: phone,
+        telephone: telephone,
+        socialMedia: {
+          linkedin: linkedin,
+          facebook: facebook,
+          sitePortifolio: sitePortifolio
+        }
+      },
+
+      adress: {
+        street: street,
+        number: number,
+        district: district,
+        city: city,
+        state: state,
+        country: country,
+        zipCode: zipCode
+      },
+
+      skills: {
+        professionalResume: professionalResume,
+        education: {
+          degree: degree,
+          institution: institution,
+          fieldOfStudy: fieldOfStudy,
+          period: {
+            startDate: educationStartDate,
+            endDate: educationEndDate
+          }
+        }
+      },
+
+      languages: {
+        idiom: idiom,
+        level: level
+      },
+
+      experiences: {
+        companyName: companyName,
+        occupation: occupation,
+        period: {
+          startDate: experienceStartDate,
+          endDate: experienceEndDate
+        },
+        description: description
+      },
+      imgPath: imgPath
+    };
+    User.findOneAndUpdate({ _id: req.user._id }, cv, { omitUndenfined: true })
+      .then(() => res.redirect('/user/profile'))
+      .catch((error) => {
+        console.log(error);
+        res.render('/', { message: 'Something went wrong' });
+      });
+  }
+);
+//---------------------------------------------------------------------------
+
+//DASHBOARD
+router.get(
+  '/dashboard',
+  ensureUserLoggedIn('/user/login'),
+  (req, res, next) => {
+    res.render('user/dashboard', { user: req.user });
+  }
+);
+//---------------------------------------------------------------------------
+
+// // PROFILE ROUTER
+// // router.get('/profile/:userID', ensureUserLoggedIn(), (req, res, next) => {
+// //   res.render(`user/profile`, req.user);
+// // });
+
+// // router.get('/profile/', ensureUserLoggedIn(), (req, res, next) => {
+// //   res.redirect(`/user/profile/${req.user._id}`);
+// // });
+
+//---------------------------------------------------------------------------
+
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/user/login');
+});
+//  ------------------------------------------------------------------
+
+//ACTIVATION CODE
+router.get(
+  '/confirmation/company/:companyID/process/:processID',
+  ensureUserLoggedIn('/user/login'),
+  (req, res, next) => {
     User.findOneAndUpdate(
-      { activationCode: req.params.activationCode },
-      { active: true },
-      { new: true }
-      )
+      { _id: req.user._id },
+      { $push: { processes: req.params.processID } }
+    )
       .then((user) => {
         if (user) {
           res.render('user/confirmationCode', {
-            message: 'Your account is active! Welcome!'
+            user: req.user,
+            message: `Your account is active! Welcome!`
           });
         } else {
           res.render('user/confirmationCode', {
+            user: req.user,
             message: "We didn't find any account for this activation code!"
           });
         }
       })
       .catch((err) => console.log(err));
-    });
-    //---------------------------------------------------------------------------
-    
-    // CURRICULUM ROUTER
-    router.get('/cv', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-      const date = req.user.personal.dateOfBirth;
-      res.render('user/cv', req.user);
-    });
-    
-    router.post(
-      '/cv',
-      uploadCloudUser.single('photo'),
-      ensureUserLoggedIn(),
-      (req, res, next) => {
-        const {
-          name,
-          lastName,
-          dateOfBirth,
-          maritalStatus,
-          cpf,
-          email,
-          phone,
-          telephone,
-          linkedin,
-          facebook,
-          sitePortifolio,
-          nationality,
-          street,
-          number,
-          district,
-          city,
-          state,
-          country,
-          zipCode,
-          professionalResume,
-          degree,
-          institution,
-          fieldOfStudy,
-          educationStartDate,
-          educationEndDate,
-          idiom,
-          level,
-          companyName,
-          occupation,
-          experienceStartDate,
-          experienceEndDate,
-          description
-        } = req.body;
-        let imgPath = undefined;
-        if (req.file) {
-          imgPath = req.file.secure_url;
-        }
-        
-        User.findOne({ 'personal.cpf': cpf })
-        .then((user) => {
-          if (user) {
-            res.render('user/cv', { message: 'CPF already registered!' });
-            return;
-          }
-          console.log(imgPath);
-          const cv = {
-            personal: {
-              name: name,
-              lastName: lastName,
-              dateOfBirth: dateOfBirth,
-              maritalStatus: maritalStatus,
-              cpf: cpf,
-              nationality: nationality,
-              email: email,
-              phone: phone,
-              telephone: telephone,
-              socialMedia: {
-                linkedin: linkedin,
-                facebook: facebook,
-                sitePortifolio: sitePortifolio
-              }
-            },
-            
-            adress: {
-              street: street,
-              number: number,
-              district: district,
-              city: city,
-              state: state,
-              country: country,
-              zipCode: zipCode
-            },
-            
-            skills: {
-              professionalResume: professionalResume,
-              education: {
-                degree: degree,
-                institution: institution,
-                fieldOfStudy: fieldOfStudy,
-                period: {
-                  startDate: educationStartDate,
-                  endDate: educationEndDate
-                }
-              }
-            },
-            
-            languages: {
-              idiom: idiom,
-              level: level
-            },
-            
-            experiences: {
-              companyName: companyName,
-              occupation: occupation,
-              period: {
-                startDate: experienceStartDate,
-                endDate: experienceEndDate
-              },
-              description: description
-            },
-            imgPath: imgPath
-          };
-          
-          User.findOneAndUpdate(
-            { _id: req.user._id },
-            cv,
-            { omitUndenfined: true },
-            (err) => {
-              if (err) {
-                res.render('user/cv', { message: 'Something went wrong' });
-              } else {
-                res.redirect('/user/profile');
-              }
-            }
-            );
-          })
-          .catch((err) => console.log(err));
-        }
-        );
-        //---------------------------------------------------------------------------
-        
-        //DASHBOARD
-        router.get('/dashboard', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-          res.render('user/dashboard');
-        });
-        //---------------------------------------------------------------------------
-        
+  }
+);
+//---------------------------------------------------------------------------
 
-        // // PROFILE ROUTER
-        // // router.get('/profile/:userID', ensureUserLoggedIn(), (req, res, next) => {
-        // //   res.render(`user/profile`, req.user);
-        // // });
-        
-        // // router.get('/profile/', ensureUserLoggedIn(), (req, res, next) => {
-        // //   res.redirect(`/user/profile/${req.user._id}`);
-        // // });
+// PROFILE ROUTER
+router.get('/profile/:userID', ensureLoggedIn('/'), (req, res, next) => {
+  const id = req.params.userID;
+  User.findById(id)
+    .then((user) => {
+      if (String(req.user._id) === id) {
+        res.render('user/profile', { user: user, flag: true });
+      } else {
+        res.render('user/profile', { user: user });
+      }
+    })
+    .catch((error) => console.log(error));
+});
 
-        //---------------------------------------------------------------------------
-        
-        router.get('/logout', (req, res) => {
-          req.logout();
-          res.redirect('/user/login');
-        });
-        //  ------------------------------------------------------------------
-        
-        //ACTIVATION CODE
-        router.get('/confirmation/company/:companyID/process/:processID', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-          User.findOneAndUpdate(
-            { _id: req.user._id},
-            {$push: { processes: req.params.processID }
-          }
-          )
-          .then((user) => {
-            if (user) {
-              res.render('user/confirmationCode', {
-                message: `Your account is active! Welcome!`
-              });
-            } else {
-              res.render('user/confirmationCode', {
-                message: "We didn't find any account for this activation code!"
-              });
-            }
-          })
-          .catch((err) => console.log(err));
-        });
-        //---------------------------------------------------------------------------
-        
-        // PROFILE ROUTER
-        router.get('/profile/:userID', ensureLoggedIn('/'), (req, res, next) => {
-          const id = req.params.userID;
-          User.findById(id)
-          .then((user) => {
-            if (String(req.user._id) === id) {
-              res.render('user/profile', {user, flag:true});
-            } else {
-              res.render('user/profile', {user});
-            }
-          })
-          .catch((error) => console.log(error));
-        });
-        
-        router.get('/profile/', ensureLoggedIn('/'), (req, res, next) => {
-          res.redirect(`/user/profile/${req.user._id}`);
-        });
-        //---------------------------------------------------------------------------
-
-        
-        // PROCESS LIST
-        router.get('/profile/:userID/processes', ensureLoggedIn('/'), (req, res, next) => {
-          User.findById(req.params.userID).populate('processes')
-          .then(user => res.render('user/processes', user))
-          .catch(error => console.log(error))
-        });
-        //---------------------------------------------------------------------------
-        
-        
-        module.exports = router;
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// PERFORMANCE LIST
-router.get('/profile/:userID/performance', ensureLoggedIn('/'), (req, res, next) => {
-  User.findById(req.params.userID).populate('questions')
-  .then(user => {
-  let totalQuestions = user.questions.length;
-  let correctAnswers = user.questions.reduce((total, question) => {
-    if(question.statusAnswer) {
-    return total += 1
-    }
-  });
-  let categoryArray = user.questions.map((element) => {
-    return element.question;
-  });
-  Questions.find({_id: {$in: categoryArray}})
-  .then(category => res.render('user/performance', category))
-  .catch(error => console.log(error))
-})
-  .catch(error => console.log(error))
+router.get('/profile/', ensureLoggedIn('/'), (req, res, next) => {
+  res.redirect(`/user/profile/${req.user._id}`);
 });
 //---------------------------------------------------------------------------
 
+// PROCESS LIST
+router.get(
+  '/profile/:userID/processes',
+  ensureLoggedIn('/'),
+  (req, res, next) => {
+    User.findById(req.params.userID)
+      .populate('processes')
+      .then((user) => res.render('user/processes', { user: user }))
+      .catch((error) => console.log(error));
+  }
+);
+//---------------------------------------------------------------------------
 
+module.exports = router;
 
-
-
-        
-        //CARD       
-        function shuffle(array) {
-          var currentIndex = array.length, temporaryValue, randomIndex;
-          
-          while (0 !== currentIndex) {
-            
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-            
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
+// PERFORMANCE LIST
+router.get(
+  '/profile/:userID/performance',
+  ensureLoggedIn('/'),
+  (req, res, next) => {
+    User.findById(req.params.userID)
+      .populate('questions')
+      .then((user) => {
+        let totalQuestions = user.questions.length;
+        let correctAnswers = user.questions.reduce((total, question) => {
+          if (question.statusAnswer) {
+            return (total += 1);
           }
-          
-          return array;
-        }
-        
-        const getACard = (process, companyName, categories, difficulties, userAnswers) => {
-          
-          const promise = new Promise((resolve, reject) => {
-            console.log('-------------------------------------')
-            let questionArr = [];
-            let leftToAnswer = 0;
-            let totalToAnswer = 0;
-            
-            Questions.find({category: {$in: categories}})
-            .then(questions => {
-              questionArr = questions.filter(question => {              
-                for (let item in difficulties){
-                  let index = difficulties[item].indexOf(question.category);
-                  if (index != -1)
-                  {
-                    let diff = difficulties[index];
-                    
-                    if(question.difficulty == diff.slice(diff.indexOf('->') + 2, diff.length)) {
-                      totalToAnswer += 1;
-                      if(userAnswers.length === 0) {
-                        return true;
-                      }  
-                      for (let x = 0; x < userAnswers.length; x += 1) { 
-                        if(String(userAnswers[x].question) === String(question._id)) {
-                          return false;
-                        }
-                      }
-                      return true;              
-                    }
+        });
+        let categoryArray = user.questions.map((element) => {
+          return element.question;
+        });
+        Questions.find({ _id: { $in: categoryArray } })
+          .then((category) => res.render('user/performance', {user: user, category}))
+          .catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
+  }
+);
+//---------------------------------------------------------------------------
+
+//CARD
+function shuffle(array) {
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+const getACard = (
+  process,
+  companyName,
+  categories,
+  difficulties,
+  userAnswers
+) => {
+  const promise = new Promise((resolve, reject) => {
+    console.log('-------------------------------------');
+    let questionArr = [];
+    let leftToAnswer = 0;
+    let totalToAnswer = 0;
+
+    Questions.find({ category: { $in: categories } })
+      .then((questions) => {
+        questionArr = questions.filter((question) => {
+          for (let item in difficulties) {
+            let index = difficulties[item].indexOf(question.category);
+            if (index != -1) {
+              let diff = difficulties[index];
+
+              if (
+                question.difficulty ==
+                diff.slice(diff.indexOf('->') + 2, diff.length)
+              ) {
+                totalToAnswer += 1;
+                if (userAnswers.length === 0) {
+                  return true;
+                }
+                for (let x = 0; x < userAnswers.length; x += 1) {
+                  if (
+                    String(userAnswers[x].question) === String(question._id)
+                  ) {
+                    return false;
                   }
                 }
-              })
-              if (questionArr.length === 0) {
-                resolve(null);
+                return true;
               }
-              
-              leftToAnswer = totalToAnswer - questionArr.length;
-              const randomQuestion = questionArr[Math.floor(Math.random() * (questionArr.length - 1))];
-              const alternatives = shuffle([...randomQuestion.incorrectAlternatives, randomQuestion.correctAlternative]);
-              
-              Category.findById(randomQuestion.category)
-              .then(category => {
-                const card = {
-                  process,
-                  company: companyName,
-                  category: category.name,
-                  question: randomQuestion.title,
-                  questionId: randomQuestion._id,
-                  alternatives,
-                  status: [leftToAnswer, totalToAnswer],  
-                } 
-                resolve(card);
-              })
-              .catch(err => reject(err));    
-            })
-            .catch(err => reject(err));
-          });
-          
-          return promise;
-        }
-        
-        const getCardInfo = (processId, userId) => {
-          const getCompany = Company.find({processes: processId}, {name: 1, _id: 0});
-          const getCategories = Process.findById(processId, {title: 1, categories: 1, difficulties: 1, _id: 0});
-          const getUser = User.findById(userId, {questions: 1, _id: 0});
-          
-          return Promise.all([getCompany, getCategories, getUser]);
-        }
-        
-        router.get('/process/:processId/test', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-          res.render('user/test');
+            }
+          }
         });
-        
-        router.get('/process/:processId/getCard', (req, res, next) => {
-          getCardInfo(req.params.processId, req.user._id).then(result => {
-            getACard(result[1].title, result[0][0].name, result[1].categories, result[1].difficulties, result[2].questions).then(card => {
-              if (!card) {
-                card = req.user;
-                res.status(200).json(card);  
-              }
-              res.status(200).json(card);
-            })
-            .catch(err => res.status(400).json(err));
+        if (questionArr.length === 0) {
+          resolve(null);
+        }
+
+        leftToAnswer = totalToAnswer - questionArr.length;
+        const randomQuestion =
+          questionArr[Math.floor(Math.random() * (questionArr.length - 1))];
+        const alternatives = shuffle([
+          ...randomQuestion.incorrectAlternatives,
+          randomQuestion.correctAlternative
+        ]);
+
+        Category.findById(randomQuestion.category)
+          .then((category) => {
+            const card = {
+              process,
+              company: companyName,
+              category: category.name,
+              question: randomQuestion.title,
+              questionId: randomQuestion._id,
+              alternatives,
+              status: [leftToAnswer, totalToAnswer]
+            };
+            resolve(card);
           })
-          .catch(err => res.status(400).json(err));
+          .catch((err) => reject(err));
+      })
+      .catch((err) => reject(err));
+  });
+
+  return promise;
+};
+
+const getCardInfo = (processId, userId) => {
+  const getCompany = Company.find(
+    { processes: processId },
+    { name: 1, _id: 0 }
+  );
+  const getCategories = Process.findById(processId, {
+    title: 1,
+    categories: 1,
+    difficulties: 1,
+    _id: 0
+  });
+  const getUser = User.findById(userId, { questions: 1, _id: 0 });
+
+  return Promise.all([getCompany, getCategories, getUser]);
+};
+
+router.get(
+  '/process/:processId/test',
+  ensureUserLoggedIn('/user/login'),
+  (req, res, next) => {
+    res.render('user/test', {user: user});
+  }
+);
+
+router.get('/process/:processId/getCard', (req, res, next) => {
+  getCardInfo(req.params.processId, req.user._id)
+    .then((result) => {
+      getACard(
+        result[1].title,
+        result[0][0].name,
+        result[1].categories,
+        result[1].difficulties,
+        result[2].questions
+      )
+        .then((card) => {
+          if (!card) {
+            card = req.user;
+            res.status(200).json(card);
+          }
+          res.status(200).json(card);
+        })
+        .catch((err) => res.status(400).json(err));
+    })
+    .catch((err) => res.status(400).json(err));
+});
+
+router.get(
+  '/processes/show/:processId',
+  ensureUserLoggedIn('/user/login'),
+  (req, res, next) => {
+    const link = `${process.env.baseURL}/user/confirmation/company/${
+      req.user._id
+    }/process/${req.params.processId}`;
+
+    const getUsers = User.find({ processes: req.params.processId });
+    const getProcess = Process.findById(req.params.processId).populate(
+      'categories'
+    );
+
+    Promise.all([getUsers, getProcess])
+      .then((result) => {
+        const catQuestRel = [];
+        const categoryArr = [];
+        let questionArr = [];
+        result[1].categories.forEach((category) => {
+          categoryArr.push(category._id);
         });
-        
-        router.get('/processes/show/:processId', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-          const link = `${process.env.baseURL}/user/confirmation/company/${req.user._id}/process/${req.params.processId}`;
-          
-          const getUsers = User.find({processes: req.params.processId});
-          const getProcess = Process.findById(req.params.processId).populate('categories');
-          
-          Promise.all([getUsers, getProcess])
-          .then(result => {
-            
-            const catQuestRel = [];
-            const categoryArr = [];
-            let questionArr = [];
-            result[1].categories.forEach(category => {
-              categoryArr.push(category._id);
-            })
-            
-            Questions.find({category: {$in: categoryArr}})
-            .then(questions => {
-              questionArr = questions.filter(question => {
-                for (let item in result[1].difficulties){
-                  let index = result[1].difficulties[item].indexOf(question.category);
-                  if ( index != -1)
-                  {
-                    let diff = result[1].difficulties[index];
-                    
-                    if(question.difficulty == diff.slice(diff.indexOf('->') + 2, diff.length)) {
-                      return true;
-                    }
+
+        Questions.find({ category: { $in: categoryArr } })
+          .then((questions) => {
+            questionArr = questions.filter((question) => {
+              for (let item in result[1].difficulties) {
+                let index = result[1].difficulties[item].indexOf(
+                  question.category
+                );
+                if (index != -1) {
+                  let diff = result[1].difficulties[index];
+
+                  if (
+                    question.difficulty ==
+                    diff.slice(diff.indexOf('->') + 2, diff.length)
+                  ) {
+                    return true;
                   }
                 }
-              })
-              result[1].categories.forEach(category => {
-                catQuestRel.push([category.name, []]);
-                questionArr.forEach(question => {
-                  if(String(question.category) === String(category._id)){
-                    catQuestRel[catQuestRel.length - 1][1].push(question._id);
-                  }
-                });
+              }
+            });
+            result[1].categories.forEach((category) => {
+              catQuestRel.push([category.name, []]);
+              questionArr.forEach((question) => {
+                if (String(question.category) === String(category._id)) {
+                  catQuestRel[catQuestRel.length - 1][1].push(question._id);
+                }
               });
-              res.render('company/showProcess', {users: result[0], process: result[1], catQuestRel, link});
-            })
-            .catch(err => console.log(err));
-          })  
-          .catch(err => console.log(err));
-        });
-        
-        router.post('/process/test/saveAnswer', (req, res, next) => {
-          const {question, answer} = req.query;
-          Questions.findById(question, {correctAlternative: 1, _id: 0})
-          .then(result => {
-            const statusAnswer = String(result.correctAlternative) === String(answer) ? true : false;
-            User.findByIdAndUpdate(req.user._id, {$push: {questions: {
-              question,
-              answer,
-              statusAnswer,
-            }}})
-            .then(result => res.status(200).json(result))
-            .catch(err => res.status(401).json(err));
+            });
+            res.render('company/showProcess', {
+              user: user,
+              users: result[0],
+              process: result[1],
+              catQuestRel,
+              link
+            });
           })
-          .catch(err => {
-            console.log(err);
-            res.status(400).json(err)
-          });
-          
-        });
-        
-        module.exports = router;
-        
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
+);
+
+router.post('/process/test/saveAnswer', (req, res, next) => {
+  const { question, answer } = req.query;
+  Questions.findById(question, { correctAlternative: 1, _id: 0 })
+    .then((result) => {
+      const statusAnswer =
+        String(result.correctAlternative) === String(answer) ? true : false;
+      User.findByIdAndUpdate(req.user._id, {
+        $push: {
+          questions: {
+            question,
+            answer,
+            statusAnswer
+          }
+        }
+      })
+        .then((result) => res.status(200).json(result))
+        .catch((err) => res.status(401).json(err));
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
+});
+
+module.exports = router;
