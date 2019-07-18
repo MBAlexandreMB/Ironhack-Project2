@@ -2,11 +2,12 @@ const passport = require('passport');
 const User = require('../models/user');
 const Company = require('../models/company');
 const LocalStrategy = require('passport-local').Strategy;
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 const bcrypt = require('bcrypt');
 
 //PASSPORT COMPANY
 passport.serializeUser((user, cb) => {
-  cb(null, user._id);
+    cb(null, user._id);
 });
 
 passport.deserializeUser((id, cb) => {
@@ -79,6 +80,26 @@ passport.use(
       }
   
       return next(null, user);
+    });
+  }));
+
+  passport.use(new LinkedInStrategy({
+    clientID: process.env.LINKEDIN_CLIENTID,
+    clientSecret: process.env.LINKEDIN_SECRET,
+    callbackURL: `${process.env.baseURL}/company/auth/linkedin/callback`,
+    scope: ['r_emailaddress', 'r_liteprofile'],
+    state: true,
+  }, function(accessToken, refreshToken, profile, done) {
+      Company.findOne({linkedinId: profile.id}, (err, user) => {
+        if(user) {
+          return done(err, user);
+        }
+
+        Company.create({linkedinId: profile.id, email: profile.emails[0].value, active: true}, (err, user) => {
+          return done(err, user);
+        })
+      });
+    process.nextTick(function () {
     });
   }));
 

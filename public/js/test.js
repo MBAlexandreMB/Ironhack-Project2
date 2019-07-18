@@ -32,7 +32,7 @@ const setCard = (card) => {
 
   
   for(let x = 0; x < buttons.length; x += 1){
-    buttons[x].addEventListener('click', (e) => {
+    buttons[x].addEventListener('mouseup', (e) => {
       saveAnswer(e);
     });
   }

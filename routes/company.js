@@ -11,9 +11,10 @@ const Process = require('../models/process');
 const User = require('../models/user');
 const Questions = require('../models/questions');
 
+
 function ensureCompanyLoggedIn() {
   return function(req, res, next) {
-    if (req.isAuthenticated() && req.user.ein) {
+    if (req.isAuthenticated() && (req.user.ein || req.user.linkedinId)) {
       return next();
     } else {
       res.redirect('/company/login');
@@ -142,9 +143,15 @@ router.post("/login", passport.authenticate("local-company", {
   passReqToCallback: true
 }));
 
-// router.get('/auth/linkedin', (req, res, next) => {
-//   res.send('linkedin');
-// });
+router.get('/auth/linkedin',
+  passport.authenticate('linkedin'),
+  function(req, res){
+  });
+
+router.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
+  successRedirect: '/company/dashboard',
+  failureRedirect: '/company/login'
+}));
 
 router.get("/logout", (req, res) => {
   req.logout();
@@ -170,7 +177,7 @@ ensureCompanyLoggedIn(),
 uploadCloudCompany.single('logo'), 
 (req, res, next) => {
   let logo = undefined;
-  const {name, ein, street, number, district, city, state, country} = req.body;
+  const {name, ein, email, street, number, district, city, state, country} = req.body;
   
   if(req.file) {
     logo = req.file.secure_url;
@@ -180,6 +187,7 @@ uploadCloudCompany.single('logo'),
   Company.findOneAndUpdate({_id: req.user._id}, {$set: {
     name, 
     ein, 
+    email,
     'address.street': street,
     'address.number': number,
     'address.district': district,
@@ -313,6 +321,7 @@ router.get('/processes/new/getSubByIdCategory/:categoryId',
 });
 
 router.get('/processes/show/:processId', ensureLoggedIn('/'), (req, res, next) => {
+  console.log('--------------------------')
   const link = `${process.env.baseURL}/user/confirmation/company/${req.user._id}/process/${req.params.processId}`;
 
   const getUsers = User.find({processes: req.params.processId});
