@@ -176,7 +176,7 @@ router.get('/signup/confirmation/:activationCode', (req, res, next) => {
 // CURRICULUM ROUTER
 router.get('/cv', ensureUserLoggedIn('/user/login'), (req, res, next) => {
   console.log(req.user.imgPath);
-  res.render('user/cv', { user: req.user });
+  res.render('user/cv', { user: req.user, navuser: true });
 });
 
 router.post(
@@ -295,9 +295,9 @@ router.get('/profile/:userID', ensureLoggedIn('/'), (req, res, next) => {
   User.findById(id)
     .then((user) => {
       if (String(req.user._id) === id) {
-        res.render('user/profile', { user: user, flag: true });
+        res.render('user/profile', { user: user, flag: true, navuser: true });
       } else {
-        res.render('user/profile', { user: user });
+        res.render('user/profile', { navcompany: true, user });
       }
     })
     .catch((error) => console.log(error));
@@ -315,7 +315,9 @@ router.get(
   (req, res, next) => {
     User.findById(req.params.userID)
       .populate('processes')
-      .then((user) => res.render('user/processes', { user: user }))
+      .then((user) => {
+        res.render('user/processes', { user: user, navuser: true })}
+        )
       .catch((error) => console.log(error));
   }
 );
@@ -336,11 +338,11 @@ router.get('/confirmation/company/:companyID/process/:processID', ensureUserLogg
     .then((user) => {
       if (user) {
         res.render('user/confirmationProcess', {
-          message: `You are enrolled in "${result[0].name} - ${result[1].title}" process!`
+          message: `You are enrolled in "${result[0].name} - ${result[1].title}" process!`, navuser: true, user: req.user
         });
       } else {
         res.render('user/confirmationProcess', {
-          message: "We didn't find your account. Are you sure you're logged in?"
+          message: "We didn't find your account. Are you sure you're logged in?", navuser: true, user: req.user
         });
       }
     })
@@ -349,7 +351,7 @@ router.get('/confirmation/company/:companyID/process/:processID', ensureUserLogg
   .catch(err => {
     console.log(err);
     res.render('user/confirmationProcess', {
-      message: "We didn't find any process within this adress!"
+      message: "We didn't find any process within this adress!", navuser: true
     });
   });
 });
@@ -403,8 +405,11 @@ router.get('/profile/:userID/performance', ensureLoggedIn('/'), (req, res, next)
           performance[questCatRel[item.question]].total += 1 * multiplier;
           performance[questCatRel[item.question]].percentage = ((performance[questCatRel[item.question]].correct /  performance[questCatRel[item.question]].total) * 100) + '%';
         });
-        console.log(user);
-        res.render('user/performance', {performance, user});
+        if (String(req.user._id) === String(user._id)) {
+          res.render('user/performance', {performance, user, navuser: true});
+        } else {
+          res.render('user/performance', {performance, user, navcompany: true});
+        }
       })
       .catch(err => console.log(err));        
     })
@@ -500,7 +505,7 @@ const getCardInfo = (processId, userId) => {
 }
 
 router.get('/process/:processId/test', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-  res.render('user/test', {user: req.user});
+  res.render('user/test', {user: req.user, navuser: true});
 });
 
 router.get('/process/:processId/getCard', (req, res, next) => {
@@ -556,7 +561,7 @@ router.get('/processes/show/:processId', ensureUserLoggedIn('/user/login'), (req
           }
         });
       });
-      res.render('company/showProcess', {users: result[0], process: result[1], catQuestRel, link});
+      res.render('company/showProcess', {users: result[0], process: result[1], catQuestRel, link, navuser: true});
     })
     .catch(err => console.log(err));
   })  

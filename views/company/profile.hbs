@@ -1,46 +1,60 @@
 <link rel="stylesheet" href="../../stylesheets/companyProfile.css">
 
-<a href="/company/profile/credentials">Change password</a>
+<div id="content">
+<div id="company-profile-container">
 <form action="/company/profile/save" method="POST" enctype="multipart/form-data">
-  {{#if username}}
-  <label for="name">Username: </label>
-  <input type="text" name="name" value="{{username}}" disabled/>
-  {{/if}}
-  <label for="name">Name: </label>
-  <input type="text" name="name" value="{{name}}" required/>
-  <label for="ein">Employer Identification Number:</label> 
-  <input type="text" name="ein" value="{{ein}}" required/>
-  <label for="email">E-mail:</label> 
-  <input type="text" name="email" value="{{email}}" required/>
-  
+<div id="first-row-form">
+<div id="img-selector-container">
   {{#if logo}}
     <img id="profile-company-logo" src="{{logo}}" alt="{{name}}'s logo"/>
   {{else}}
     <img id="profile-company-logo" src="../../images/nologo.png" alt="No logo available"/>
   {{/if}}
-  <label for="logo">Logo: </label>
-  <input id="profile-company-logo-selector" type="file" name="logo" accept=".jpg, .jpeg, .png" />
+  <label class="link-btn-little wb" id="logo-label" for="logo">Logo</label>
+  <input hidden id="profile-company-logo-selector" type="file" name="logo" accept=".jpg, .jpeg, .png" />
+</div>
+<div id="main-info-container">
+  {{#if username}}
+  <input type="text" name="name" value="{{username}}" disabled/>
+  {{/if}}
+  <input type="text" name="name" placeholder="Name" value="{{name}}" required/>
+  <input type="text" name="ein" placeholder="Employer Identification Number" value="{{ein}}" required/>
+  <input type="text" name="email" placeholder="E-mail" value="{{email}}" required/>
+</div>
+</div>
 
-<fieldset>
-  <legend>Adress</legend>
-
-  <label for="street">Street: </label>
-  <input type="text" name="street" value="{{address.street}}" />
-  <label for="number">Number: </label>
-  <input type="number" name="number" value="{{address.number}}" />
-  <label for="district">District: </label>
-  <input type="text" name="district" value="{{address.district}}" />
-  <label for="city">City: </label>
-  <input type="text" name="city" value="{{address.city}}" />
-  <label for="state">State: </label>
-  <input type="text" name="state" value="{{address.state}}" />
-  <label for="country">Country: </label>
-  <input type="text" name="country" value="{{address.country}}" />
-</fieldset>
-
-<button type="submit">Save</button> <a href="/company/dashboard">Return to dashboard</a>
+<div id="second-row-form">
+  <h2>Adress</h2>
+  <div></div>
+  <div class="company-profile-adress">
+    <input type="text" name="street" placeholder="Street" value="{{address.street}}" />
+    <input type="number" name="number" placeholder="Number" value="{{address.number}}" />
+  </div>
+  <div class="company-profile-adress">
+    <input type="text" name="district" placeholder="District" value="{{address.district}}" />
+    <input type="text" name="city" placeholder="City" value="{{address.city}}" />
+  </div>
+  <div class="company-profile-adress">
+    <input type="text" name="state" placeholder="State" value="{{address.state}}" />
+    <input type="text" name="country" placeholder="Country" value="{{address.country}}" />
+  </div>
+  <div id="profile-btn-container">
+    <div class="company-profile-adress-btn">
+      <input class="link-btn pb" type="submit" value="Save" />
+      <a class="link-btn-little wb" style="width: 200px" href="/company/profile/credentials">Change password</a>
+    </div>
+  </div>
+</div>
 
 {{#if message}}
 <p class="errorMessage">{{message}}</p>
 {{/if}}
 </form>
+</div>
+</div>
+
+<script>
+  document.getElementById('logo-label').addEventListener('mouseup', () => {
+    document.getElementById('profile-company-logo-selector').click();
+  });
+</script>
