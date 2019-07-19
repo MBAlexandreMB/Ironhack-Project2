@@ -1,4 +1,17 @@
-{{#if message}}
-  <p>{{message}}</p>
-{{/if}}
-<a href="/company/login">Login</a>
+<link rel="stylesheet" href="/stylesheets/confirmationCode.css">
+
+<div class="container">
+  <div class="jumbotron text-xs-center text-center margin">
+    <h1 class="display-3">Thank You!</h1>
+    {{#if message}}
+    <p class="lead">{{message}}</p>
+    {{/if}}
+    <p class="lead d-flex justify-content-center">
+      <a id="button" class="link-btn pb" href="/company/login" style="width: 200px" role="button">Continue to login</a>
+    </p>
+    <hr>
+    <p>
+      Having trouble? <a href="#">Contact us</a>
+    </p>
+  </div>
+</div>
