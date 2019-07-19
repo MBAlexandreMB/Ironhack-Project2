@@ -68,7 +68,7 @@
                             </div>
                             <hr>
                             <div class="col-md-6">
-                                <p>{{user.username}}</p>
+                                <p>{{user.user.username}}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -76,8 +76,8 @@
                                 <label>Full name</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="name" value="{{personal.name}}"><input
-                                    class="form-control" type="text" name="lastName" value="{{personal.lastName}}">
+                                <input class="form-control" type="text" name="name" value="{{user.personal.name}}"><input
+                                    class="form-control" type="text" name="lastName" value="{{user.personal.lastName}}">
                             </div>
                         </div>
                         <div class="row">
@@ -86,7 +86,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="date" name="dateOfBirth"
-                                    value="{{personal.dateOfBirth}}">
+                                    value="{{user.personal.dateOfBirth}}">
                             </div>
                         </div>
                         <div class="row">
@@ -95,7 +95,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" id="msHidden" type="hidden"
-                                    value="{{personal.maritalStatus}}">
+                                    value="{{user.personal.maritalStatus}}">
                                 <select class="form-control" name="maritalStatus" id="">
                                     <option class="msoption" value="single">Single</option>
                                     <option class="msoption" value="married">Married</option>
@@ -108,7 +108,7 @@
                                 <label>CPF</label>
                             </div>
                             <div class="col-md-6">
-                                <input disabled class="form-control" type="text" name="cpf" value="{{personal.cpf}}">
+                                <input disabled class="form-control" type="text" name="cpf" value="{{user.personal.cpf}}">
                             </div>
                         </div>
                         <div class="row">
@@ -117,7 +117,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="text" name="nationality"
-                                    value="{{personal.nationality}}">
+                                    value="{{user.personal.nationality}}">
                             </div>
                         </div>
                         <div class="row">
@@ -125,7 +125,7 @@
                                 <label>Email</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="email" name="email" value="{{personal.email}}">
+                                <input class="form-control" type="email" name="email" value="{{user.personal.email}}">
                             </div>
                         </div>
                         <div class="row">
@@ -133,7 +133,7 @@
                                 <label>Phone</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="number" name="phone" value="{{personal.phone}}">
+                                <input class="form-control" type="number" name="phone" value="{{user.personal.phone}}">
                             </div>
                         </div>
                         <div class="row">
@@ -142,7 +142,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="number" name="telephone"
-                                    value="{{personal.telephone}}">
+                                    value="{{user.personal.telephone}}">
                             </div>
                         </div>
                         <div class="row">
@@ -150,7 +150,7 @@
                                 <label>Street</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="street" value="{{adress.street}}">
+                                <input class="form-control" type="text" name="street" value="{{user.adress.street}}">
                             </div>
                         </div>
                         <div class="row">
@@ -158,7 +158,7 @@
                                 <label>Number</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="number" name="number" value="{{adress.number}}">
+                                <input class="form-control" type="number" name="number" value="{{user.adress.number}}">
                             </div>
                         </div>
                         <div class="row">
@@ -166,7 +166,7 @@
                                 <label>District</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="district" value="{{adress.district}}">
+                                <input class="form-control" type="text" name="district" value="{{user.adress.district}}">
                             </div>
                         </div>
                         <div class="row">
@@ -174,7 +174,7 @@
                                 <label>City</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="city" value="{{adress.city}}">
+                                <input class="form-control" type="text" name="city" value="{{user.adress.city}}">
                             </div>
                         </div>
                         <div class="row">
@@ -182,7 +182,7 @@
                                 <label>State</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="state" value="{{adress.state}}">
+                                <input class="form-control" type="text" name="state" value="{{user.adress.state}}">
                             </div>
                         </div>
                         <div class="row">
@@ -190,7 +190,7 @@
                                 <label>Country</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="country" value="{{adress.country}}">
+                                <input class="form-control" type="text" name="country" value="{{user.adress.country}}">
                             </div>
                         </div>
                         <div class="row">
@@ -198,7 +198,7 @@
                                 <label>Zip code</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="number" name="zipCode" value="{{adress.zipCode}}">
+                                <input class="form-control" type="number" name="zipCode" value="{{user.adress.zipCode}}">
                             </div>
                         </div>
                     </div>
@@ -209,7 +209,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="text" name="degree"
-                                    value="{{skills.education.degree}}"> </div>
+                                    value="{{user.skills.education.degree}}"> </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -217,7 +217,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="text" name="institution"
-                                    value="{{skills.education.institution}}">
+                                    value="{{user.skills.education.institution}}">
                             </div>
                         </div>
                         <div class="row">
@@ -226,7 +226,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="text" name="fieldOfStudy"
-                                    value="{{skills.education.fieldOfStudy}}">
+                                    value="{{user.skills.education.fieldOfStudy}}">
                             </div>
                         </div>
                         <div class="row">
@@ -235,9 +235,9 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="date" name="educationstartDate"
-                                    value="{{skills.education.period.startDate}}">
+                                    value="{{user.skills.education.period.startDate}}">
                                 <input class="form-control" type="date" name="educationEndDate"
-                                    value="{{skills.education.period.endDate}}">
+                                    value="{{user.skills.education.period.endDate}}">
 
                             </div>
                         </div>
@@ -247,7 +247,7 @@
                                 <label>Idiom</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="idiom" value="{{languages.idiom}}">
+                                <input class="form-control" type="text" name="idiom" value="{{user.languages.idiom}}">
 
                             </div>
                         </div>
@@ -256,7 +256,7 @@
                                 <label>Level</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" type="text" name="level" value="{{languages.level}}">
+                                <input class="form-control" type="text" name="level" value="{{user.languages.level}}">
                             </div>
                         </div>
                     </div>
@@ -267,7 +267,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="text" name="companyName"
-                                    value="{{experiences.companyName}}">
+                                    value="{{user.experiences.companyName}}">
                             </div>
                         </div>
                         <div class="row">
@@ -276,7 +276,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="text" name="occupation"
-                                    value="{{experiences.occupation}}">
+                                    value="{{user.experiences.occupation}}">
                             </div>
                         </div>
                         <div class="row">
@@ -285,8 +285,8 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="date" name="experienceStartDate"
-                                    value="{{experiences.period.startDate}}"> <input class="form-control" type="date"
-                                    name="experienceEndDate" value="{{experiences.period.endDate}}">
+                                    value="{{user.experiences.period.startDate}}"> <input class="form-control" type="date"
+                                    name="experienceEndDate" value="{{user.experiences.period.endDate}}">
                             </div>
                         </div>
                         <div class="row">
@@ -295,7 +295,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" type="text" name="description"
-                                    value="{{experiences.description}}">
+                                    value="{{user.experiences.description}}">
 
                             </div>
                         </div>
@@ -306,7 +306,7 @@
                                 <label>Facebook</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="url" name="facebook" value="{{personal.socialMedia.facebook}}">
+                                <input type="url" name="facebook" value="{{user.personal.socialMedia.facebook}}">
                             </div>
                         </div>
                         <div class="row">
@@ -314,7 +314,7 @@
                                 <label>LinkedIn</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="url" name="linkedin" value="{{personal.socialMedia.linkedin}}">
+                                <input type="url" name="linkedin" value="{{user.personal.socialMedia.linkedin}}">
 
                             </div>
                         </div>
@@ -323,7 +323,7 @@
                                 <label>Website</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="url" name="sitePortifolio" value="{{personal.socialMedia.sitePortifolio}}">
+                                <input type="url" name="sitePortifolio" value="{{user.personal.socialMedia.sitePortifolio}}">
                             </div>
                         </div>
 
