@@ -1,15 +1,14 @@
 <link rel="stylesheet" href="../../../stylesheets/companyProfile.css">
 
-<form action="/company/profile/credentials/save" method="POST">
-  <label for="oldPassword">Current password: </label>
-  <input type="password" name="oldPassword" required/>
-  <label for="password">New password: </label>
-  <input type="password" name="password" required/>
-  <label for="rptPassword">Confirm new password: </label>
-  <input type="password" name="rptPassword" required/>
-  <button type="submit">Change password</button>
-</form>
+<div id="content-passchange">
+<form id="pass-change-form" action="/company/profile/credentials/save" method="POST">
+<h2>Password change</h2>
 
+  <input type="password" name="oldPassword" placeholder="Current password" required/>
+  <input type="password" name="password" placeholder="New password" required/>
+  <input type="password" name="rptPassword" placeholder="Confirm new password" required/>
+  <input class="link-btn pb" type="submit" value="Change password" />
+</form>
 {{#if errorMessage}}
   <p class="errorMessage">{{errorMessage}}</p>
 {{/if}}
@@ -18,5 +17,5 @@
   <p class="successMessage">{{successMessage}}</p>
 {{/if}}
 
-<a href="/company/profile">Back</a>
-<a href="/company/dashboard">Back to Dashboard</a>
+<a class="link-btn-little wb" href="/company/profile">Back</a>
+</div>
