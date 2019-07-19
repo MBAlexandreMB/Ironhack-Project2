@@ -1,0 +1,17 @@
+body {
+  background: -webkit-linear-gradient(bottom, #ae549b, #884179) !important;
+}
+
+.margin {
+  margin-top: 250px;
+}
+
+#button {
+    background-color: #884179;
+    border: #884179;
+}
+
+a {
+    color: #884179
+    
+}
