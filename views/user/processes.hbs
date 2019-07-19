@@ -1,6 +1,19 @@
-<ul>
+<link rel="stylesheet" href="/stylesheets/confirmationCode.css">
+<div class="mt-5"  style="min-height: 90vh">
+<div class="container-fluid mx-5" style="max-width: 90vw">
 {{#each user.processes}}
-<li><a href="/user/processes/show/{{_id}}">{{title}} - {{jobRole}}</a></li>
+<div class="card" style="width: 23%;">
+    <div class="card-body text-center">
+        <h5 class="card-title">{{title}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{jobRole}}</h6>
+        <p class="card-text">
+            <p>{{hierarchyOfRole}}</p>
+            <p>{{categories}}</p>
+            <p>{{difficulties}}</p>
+        </p>
+        <a href="/user/processes/show/{{_id}}" class="card-link">Go to the process</a>
+    </div>
+</div>
 {{/each}}
-</ul>
-<a href="/user/profile">Back to profile</a>
+</div>
+</div>
