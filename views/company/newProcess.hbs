@@ -1,30 +1,45 @@
 <link rel="stylesheet" href="../../stylesheets/companyProfile.css">
+<link rel="stylesheet" href="/public/stylesheets/newProcesses.css">
 
-<form action="/company/processes/new" method="POST"> 
-<label for="title">Title:</label>
-<input name="title" type="text" /> 
-<label for="jobRole">Job Role:</label>
-<input name="jobRole" type="text" /> 
-<label for="hierarchyOfRole">Hierarchy of role:</label>
-<select name="hierarchyOfRole" >
-  <option value="Auxiliar/Operational">Auxiliar/Operational</option>
-  <option value="Technical">Technical</option>
-  <option value="Internship">Internship</option>
-  <option value="Junior/Trainee">Junior/Trainee</option>
-  <option value="Full">Full</option>
-  <option value="Senior">Senior</option>
-  <option value="Supervision/Coordination">Supervision/Coordination</option>
-  <option value="Management">Management</option>
-  <option value="Direction">Direction</option>
-</select>
 
-  <div id="checkbox-container">
-  </div>
-  <button type="submit">Create new process</button>
-</form>
-
-<a href="/company/processes">Back</a>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="../../js/newProcess.js"></script>
 
+
+<a href="/user/profile">Back to profile</a>
+
+<link rel="stylesheet" href="/stylesheets/confirmationCode.css">
+
+<div class="container">
+  <div class="jumbotron text-xs-center text-center m-5">
+    <h1 class="display-3">Create a new process</h1>
+    <form action="/company/processes/new" method="POST">
+      <input class="form-control" placeholder="Title" name="title" type="text" />
+      <input class="form-control" placeholder="Job Role" name="jobRole" type="text" />
+      <select class="form-control" name="hierarchyOfRole">
+        <option value="Auxiliar/Operational">Auxiliar/Operational</option>
+        <option value="Technical">Technical</option>
+        <option value="Internship">Internship</option>
+        <option value="Junior/Trainee">Junior/Trainee</option>
+        <option value="Full">Full</option>
+        <option value="Senior">Senior</option>
+        <option value="Supervision/Coordination">Supervision/Coordination</option>
+        <option value="Management">Management</option>
+        <option value="Direction">Direction</option>
+      </select>
+      <br>
+      <p class="lead">Categories:</p>
+      <div class="mt-4" id="checkbox-container">
+      </div>
+      <br>
+      <button id="button" class="btn btn-primary btn-sm" type="submit">Create new process</button>
+    </form>
+    <br>
+    <a href="/company/processes">Back</a>
+    <hr>
+    <p>
+      Having trouble? <a href="#">Contact us</a>
+    </p>
+  </div>
+</div>

@@ -1,7 +1,21 @@
-<ul>
-  {{#each company.processes}}
-  <li><a href="/company/processes/show/{{_id}}">{{title}} - {{jobRole}} ({{hierarchyOfRole}})</a></li>
-  {{/each}}
-</ul>
-<a href="/company/processes/new">Create a new process</a>
-<a href="/company/dashboard">Back to dashboard</a>
+<div class="container-fluid mx-5 d-flex justify-content-around flex-wrap" style="max-width: 90vw">
+  <a class="link-btn wb mt-4" style="width: 80%" href="/company/processes/new">Create a new process</a>
+</div>
+
+<link rel="stylesheet" href="/stylesheets/confirmationCode.css">
+<div class="m-5" style="min-height: 90vh">
+  <div class="container-fluid mx-5 d-flex justify-content-start flex-wrap" style="max-width: 90vw">
+    {{#each company.processes}}
+    <div class="card m-3" style="width: 300px;">
+      <div class="card-body text-center">
+        <h5 class="card-title">{{title}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{jobRole}}</h6>
+        <p class="card-text">
+          <p>{{hierarchyOfRole}}</p>
+        </p>
+        <a href="/company/processes/show/{{_id}}" class="card-link">View the process</a>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
