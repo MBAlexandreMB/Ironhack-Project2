@@ -5,6 +5,7 @@
 <form action="/company/profile/save" method="POST" enctype="multipart/form-data">
 <div id="first-row-form">
 <div id="img-selector-container">
+  {{#with company}}
   {{#if logo}}
     <img id="profile-company-logo" src="{{logo}}" alt="{{name}}'s logo"/>
   {{else}}
@@ -45,6 +46,7 @@
     </div>
   </div>
 </div>
+{{/with}}
 
 {{#if message}}
 <p class="errorMessage">{{message}}</p>

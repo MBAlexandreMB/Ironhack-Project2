@@ -40,6 +40,10 @@ router.post('/signup', ensureLoggedOut('/company/processes'), (req, res, next) =
     message += 'Fill the company\'s name. ';
   }
   
+  if (ein === '') {
+    message += 'Fill your Employer Identification Number. ';
+  }
+
   if (email.toLowerCase().includes('gmail') || 
   email.toLowerCase().includes('hotmail') || 
   email.toLowerCase().includes('yahoo')) {
@@ -48,10 +52,6 @@ router.post('/signup', ensureLoggedOut('/company/processes'), (req, res, next) =
   
   if (email === '') {
     message += 'Fill your corporate e-mail. ';
-  }
-  
-  if (ein === '') {
-    message += 'Fill your Employer Identification Number. ';
   }
   
   if(password === '' || rptpassword === '') {
@@ -175,6 +175,18 @@ uploadCloudCompany.single('logo'),
   
   if(req.file) {
     logo = req.file.secure_url;
+  }
+
+  if (email.toLowerCase().includes('gmail') || 
+  email.toLowerCase().includes('hotmail') || 
+  email.toLowerCase().includes('yahoo')) {
+    res.render('company/profile', {message: 'You need a corporate e-mail to register. '});
+    return;
+  }
+  
+  if (email === '') {
+    res.render('company/profile', {message: 'Fill your corporate e-mail. '});
+    return;
   }
   
   console.log('User id: ', req.user._id);
