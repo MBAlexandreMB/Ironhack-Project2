@@ -1,19 +1,25 @@
-<div class="container text-center mt-5">
-  <form class="form-signin" action="/user/login" method="POST">
-    {{!-- <img class="mb-4" src="/docs/4.3/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> --}}
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <div class="mt-5">
-    <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""
+<link rel="stylesheet" href="/stylesheets/authStyles.css">
+
+  <div id="content"> 
+    <div id="auth-container"> 
+      <figure>
+        <img src="/images/purplese-logo-original.png" />
+      </figure>
+    <form action="/user/login" method="POST">
+    <div id="input-container">
+      <input type="email" id="inputEmail"  placeholder="Email address" required autofocus
       name="username">
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" name="password">
-    <br>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+      <input type="password" id="********" placeholder="Password" required name="password">
     </div>
-    <br>
-    <a class="d-block text-center mt-2 small" href="/user/signup">Signup</a>
-    <p class="mt-5 mb-3 text-muted">© 2019</p>
+    <div id="login-btn-container">
+      <input class="link-btn pb" type="submit" value="Login" />
+      <a class="link-btn-little wb" href="/user/signup">Signup</a>
+    </div>
+
+    {{#if message}}
+      <div class="error-message">{{ message }}</div>
+    {{/if}}
   </form>
+  </div>
 </div>
 

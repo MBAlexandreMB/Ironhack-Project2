@@ -7,11 +7,12 @@
     <form action="/company/login" method="POST">
     <div id="input-container">
       <input type="text" name="username" placeholder="Username, e-mail or Employer Identification Number" required/>
-      <input type="password" name="password" placeholder="********" required/>
+      <input type="password" name="password" placeholder="Password" required/>
     </div>
     <div id="login-btn-container">
       <input class="link-btn pb" type="submit" value="Login" />
       <a href="/company/auth/linkedin"><img src="/images/signin_with_linkedin-buttons/Non-Retina/Sign-in-Large---Default.png"></a>
+      <a class="link-btn-little wb" href="/company/signup">Signup</a>
     </div>
 
     {{#if message}}

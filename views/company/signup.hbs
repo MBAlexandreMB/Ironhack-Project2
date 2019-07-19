@@ -1,31 +1,25 @@
 <link rel="stylesheet" href="../../stylesheets/companyProfile.css">
 
-<form action="/company/signup" method="POST">
-  <label for="name">Name: </label>
-  <input type="text" name="name" required/>
-  <label>Employer Identification Number:</label> 
-  <input type="text" name="ein" required/>
-  <label for="email">Corporate e-mail:</label>
-  <input type="email" name="email" required/>
+<div id="content">
+    <div id="auth-user-container">
+      <h5>Register</h5>
+      <form action="/company/signup" method="POST">
+        <input type="text" name="name" placeholder="Name" required/>
+        <input type="text" name="ein" placeholder="Employer Identification Number" required/>
+        <input type="email" name="email" placeholder="Corporate e-mail" required/>
+
+        <input type="text" name="username" placeholder="Username" required/>
+        <input type="password" name="password" placeholder="Password" required/>
+        <input type="password" name="rptpassword" placeholder="Repeat your password" required/>
+
+        <input class="link-btn pb" type="submit" value="Sign up" />      
+        <a class="link-btn-little wb" href="/company/login">Login</a>
+      {{#if message}}
+      <p class="errorMessage">{{message}}</p>
+      {{/if}}
+      </form>
+    </div>
+</div>
 
 
-  <fieldset>
-    {{#if passWrong}}
-      <legend class='errorMessage'>Login credentials</legend>
-      <p class="errorMessage">{{passWrongMessage}}</p>
-    {{else}}
-      <legend>Login credentials</legend>
-    {{/if}}
-      <label for="username">Username: </label>
-      <input type="text" name="username" required/>
-      <label for="password">Password: </label>
-      <input type="password" name="password" required/>
-      <label for="password">Repeat your password: </label>
-      <input type="password" name="rptpassword" required/>
-  </fieldset>
-<button type="submit">Sign up</button>
-
-{{#if message}}
-<p class="errorMessage">{{message}}</p>
-{{/if}}
-</form>
+<link rel="stylesheet" href="/stylesheets/authStyles.css">
