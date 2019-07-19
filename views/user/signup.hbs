@@ -1,55 +1,17 @@
-<div class="container">
-    <div class="row">
-        <div class="col-lg-10 col-xl-9 mx-auto">
-            <div class="card card-signin flex-row my-5">
-                <div class="card-img-left d-none d-md-flex">
-                    <!-- Background image for card set in CSS! -->
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">Register</h5>
-                    <form class="form-signin" action="/user/signup" method="POST">
-                        <div class="form-label-group">
-                            <input type="text" id="inputUserame" class="form-control" placeholder="Username" required
-                                autofocus name="username">
-                            <label for="inputUserame">Username</label>
-                        </div>
-                        <div class="form-label-group">
-                            <input type="text" id="inputUserame" class="form-control" placeholder="Username" required
-                                autofocus name="cpf">
-                            <label for="inputUserame">CPF</label>
-                        </div>
+<link rel="stylesheet" href="/stylesheets/authStyles.css">
 
-                        <div class="form-label-group">
-                            <input type="email" id="inputEmail" class="form-control" placeholder="Email address"
-                                required name="email">
-                            <label for="inputEmail">Email address</label>
-                        </div>
-
-                        <hr>
-
-                        <div class="form-label-group">
-                            <input type="password" id="inputPassword" class="form-control" placeholder="Password"
-                                required name="password">
-                            <label for="inputPassword">Password</label>
-                        </div>
-
-                        <div class="form-label-group">
-                            <input type="password" id="inputConfirmPassword" class="form-control" placeholder="Password"
-                                required name="confirmPassword">
-                            <label for="inputConfirmPassword">Confirm password</label>
-                        </div>
-
-                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
-                        <p>{{message}}</p>
-                        <a class="d-block text-center mt-2 small" href="/user/login">Login</a>
-                        <hr class="my-4">
-                        <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i
-                                class="fab fa-google mr-2"></i> Sign up with Google</button>
-                        <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i
-                                class="fab fa-facebook-f mr-2"></i> Sign up with Facebook</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div id="content">
+    <div id="auth-user-container">
+        <h5>Register</h5>
+        <form action="/user/signup" method="POST">
+            <input type="text" id="inputUserame" placeholder="Username" required autofocus name="username">
+            <input type="text" id="inputUserame" placeholder="CPF" required autofocus name="cpf">                        
+            <input type="email" id="inputEmail" placeholder="Email address" required name="email">
+            <input type="password" id="inputPassword" placeholder="Password" required name="password">
+            <input type="password" id="inputConfirmPassword" placeholder="Repeat your password" required name="confirmPassword">
+            <input type="submit" class="link-btn pb" value="Register" />
+        <p>{{message}}</p>
+        <a class="link-btn-little wb" href="/user/login">Login</a>
+        </form>
     </div>
 </div>
