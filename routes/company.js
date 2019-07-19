@@ -27,11 +27,11 @@ router.get('/', (req, res, next) => {
 });
 
 //SIGN UP ROUTES ------------------------------------------------------------------
-router.get('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+router.get('/signup', ensureLoggedOut('/company/processes'), (req, res, next) => {
   res.render('company/signup');
 });
 
-router.post('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+router.post('/signup', ensureLoggedOut('/company/processes'), (req, res, next) => {
   let message = 'Please: ';
   let hash = '';
   const { name, ein, email, password, rptpassword, username } = req.body;
@@ -118,7 +118,7 @@ router.post('/signup', ensureLoggedOut('/company/dashboard'), (req, res, next) =
   .catch(err => console.log(err));
 });
 
-router.get('/signup/confirmation/:activationCode', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+router.get('/signup/confirmation/:activationCode', ensureLoggedOut('/company/processes'), (req, res, next) => {
   Company.findOneAndUpdate({activationCode: req.params.activationCode}, {active: true}, {new: true})
   .then(company => {
     if (company) {
@@ -132,12 +132,12 @@ router.get('/signup/confirmation/:activationCode', ensureLoggedOut('/company/das
 // ------------------------------------------------------------------
 
 //LOGIN ROUTES ------------------------------------------------------------------
-router.get('/login', ensureLoggedOut('/company/dashboard'), (req, res, next) => {
+router.get('/login', ensureLoggedOut('/company/processes'), (req, res, next) => {
   res.render('company/login', { "message": req.flash("error") });
 });
 
 router.post("/login", passport.authenticate("local-company", {
-  successReturnToOrRedirect: "/company/dashboard",
+  successReturnToOrRedirect: "/company/processes",
   failureRedirect: "/company/login",
   failureFlash: true,
   passReqToCallback: true
@@ -149,7 +149,7 @@ router.get('/auth/linkedin',
   });
 
 router.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
-  successRedirect: '/company/dashboard',
+  successRedirect: '/company/processes',
   failureRedirect: '/company/login'
 }));
 
@@ -159,16 +159,10 @@ router.get("/logout", (req, res) => {
 });
 //  ------------------------------------------------------------------
 
-//DASHBOARD
-router.get('/dashboard', ensureCompanyLoggedIn(), (req, res, next) => {
-  res.render('company/dashboard', {company: req.user});
-});
-//  ------------------------------------------------------------------
-
 //PROFILE ------------------------------------------------------------------
 router.get('/profile', ensureCompanyLoggedIn(), (req, res, next) => {
   Company.findById(req.user._id)
-  .then(company => res.render('company/profile', {company: company}))
+  .then(company => res.render('company/profile', {company: company, navcompany: true}))
   .catch(err => console.log(err));
 });
 
@@ -197,25 +191,25 @@ uploadCloudCompany.single('logo'),
     logo
   }}, {new: true, omitUndefined: true})
   .then((result) => {
-    res.redirect('/company/dashboard');
+    res.redirect('/company/processes');
   })
   .catch(err => {
     console.log(err);
     Company.findById(req.user._id)
-    .then(company => res.render('company/profile', {company, message:"Something went wrong! Changes not saved!"}))
+    .then(company => res.render('company/profile', {company, navcompany: true, message:"Something went wrong! Changes not saved!"}))
     .catch(err => console.log(err));
   })
 });
 
 router.get('/profile/credentials', ensureCompanyLoggedIn(), (req, res, next) => {
-  res.render('company/passChange', {company: req.user});
+  res.render('company/passChange', {company: req.user, navcompany: true});
 });
 
 router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, next) => {
   const {password, rptPassword, oldPassword} = req.body;
   
   if(password !== rptPassword) {
-    res.render('company/passChange', { company: req.user, 
+    res.render('company/passChange', { company: req.user, navcompany: true, 
       errorMessage: "Your password and your password confirmation don't match. Please, be sure they're equal." 
     })
     return;
@@ -224,7 +218,7 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
   Company.findById(req.user._id)
   .then(company => {
     if(!bcrypt.compareSync(oldPassword, company.password)) {
-      res.render('company/passChange', { company: req.user, 
+      res.render('company/passChange', { company: req.user, navcompany: true,
         errorMessage: "Wrong current password!" 
       })
       return;
@@ -234,7 +228,7 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
     
     Company.findOneAndUpdate({_id: req.user._id}, {password: hash})
     .then(() => {
-      res.render('company/passChange', { company: req.user,
+      res.render('company/passChange', { company: req.user, navcompany: true,
         successMessage: "Password changed!"
       })
     })
@@ -248,13 +242,13 @@ router.post('/profile/credentials/save', ensureCompanyLoggedIn(), (req, res, nex
 router.get('/processes', ensureCompanyLoggedIn(), (req, res, next) => {
   Company.findById(req.user._id).populate('processes')
   .then(company => {
-    res.render('company/process', {company});
+    res.render('company/process', {company, navcompany: true});
   })
   .catch(err => console.log(err));
 });
 
 router.get('/processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
-  res.render('company/newProcess', {company: req.user});
+  res.render('company/newProcess', {company: req.user, navcompany: true});
 });
 
 router.post('/processes/new', ensureCompanyLoggedIn(), (req, res, next) => {
@@ -321,7 +315,6 @@ router.get('/processes/new/getSubByIdCategory/:categoryId',
 });
 
 router.get('/processes/show/:processId', ensureLoggedIn('/'), (req, res, next) => {
-  console.log('--------------------------')
   const link = `${process.env.baseURL}/user/confirmation/company/${req.user._id}/process/${req.params.processId}`;
 
   const getUsers = User.find({processes: req.params.processId});
@@ -360,16 +353,11 @@ router.get('/processes/show/:processId', ensureLoggedIn('/'), (req, res, next) =
           }
         });
       });
-      res.render('company/showProcess', {users: result[0], process: result[1], catQuestRel, company: req.user, link});
+      res.render('company/showProcess', {navcompany: true, users: result[0], process: result[1], catQuestRel, company: req.user, link});
     })
     .catch(err => console.log(err));
   })  
 .catch(err => console.log(err));
 });
-
-// router.get('/processes/new/getNumOfQuestions', (req, res, next) => {
-//   Questions.find({})
-// });
-//---------------------------------------------
 
 module.exports = router;

@@ -1,14 +1,105 @@
+#content {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
+  padding: 40px 40px;
+}
+
+#first-row-form {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: start;
+  align-items: flex-end;
+
+}
+
+#company-profile-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: start;
+
+
+  width: 90%;
+}
+
+#company-profile-container form {
+  width: 100%;
+}
+
+#profile-company-logo {
+  width: 100px;
+  height: auto;
+}
+
+#img-selector-container {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 15%;
+  margin-right: 40px;
+
+  align-items: center;
+}
+
+#second-row-form {
+  display: flex;
+  flex-flow: column nowrap;
+  margin-top: 40px;
+}
+
+#profile-btn-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.company-profile-adress-btn {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.company-profile-adress-btn input {
+  display: flex;
+  flex-flow: column wrap;
+
+  width: 300px;
+  padding: 10px;
+  margin: 20px 0 10px 0 !important;
+}
+
+.company-profile-adress {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.company-profile-adress input {
+  margin: 5px;
+  width: 41%;
+}
+
+
+#img-selector-container  img {
+  margin: 10px;
+}
+
+#main-info-container {
+  display: flex;
+  flex-flow: column;
+  width: 65%;
+}
+
+#company-profile-container input {
+  margin: 5px;
+  box-shadow: 1px 1px 1px #ae549b;
+  border: none;
+  border-radius: 5px;
+}
+
 .successMessage {
   color: green;
 }
 
 .errorMessage {
   color: red;
-}
-
-#profile-company-logo {
-  width: 150px;
-  height: auto;
 }
 
 form > textarea {
@@ -36,4 +127,36 @@ form > textarea {
 .divinfo-container {
   display: flex;
   flex-flow: row wrap;
+}
+
+#pass-change-form {
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  width: 50%;
+
+  font-family: 'Roboto';
+}
+
+#pass-change-form input {
+  margin: 10px;
+  box-shadow: 1px 1px 1px #ae549b;
+  border: none;
+  border-radius: 5px;
+}
+
+#content-passchange {
+  padding-top: 40px;
+  display: flex;
+  flex-flow: column nowrap;
+
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 820px) {
+  #profile-company-logo {
+    width: 150px;
+    height: auto;
+  }
 }
