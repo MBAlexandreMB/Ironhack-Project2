@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="/stylesheets/authStyles.css">
+
+<div id="content">
+  <div id="auth-container">
 {{#if user.personal.name}}
 <h1>{{user.personal.name}} {{user.personal.lastName}}'s performance:</h1>
 {{else}}
@@ -8,5 +12,9 @@
   <li>{{name}}: {{percentage}}</li>
   {{/each}}
 </ul>
+<a class="link-btn pb" href="/user/profile/{{user._id}}">Back to profile</a>
+  </div>
+</div>
 
-<a href="/user/profile/{{user._id}}">Back to profile</a>
+
+
