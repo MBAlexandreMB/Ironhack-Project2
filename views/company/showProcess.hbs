@@ -1,4 +1,8 @@
-<h1>{{process.title}}</h1>
+<link rel="stylesheet" href="/stylesheets/authStyles.css">
+
+<div id="content">
+  <div id="auth-container">
+    <h1>{{process.title}}</h1>
 <h5>{{process.jobRole}} ({{process.hierarchyOfRole}})</h5>
 {{#if company}}
   <p>Link for candidates to enroll: <br><a href="{{link}}">{{link}}</a></p>
@@ -30,5 +34,10 @@
 {{else}}
   <a href="/user/process/{{process._id}}/test">Take the test!</a>
 {{/if}}
+
+
+  </div>
+</div>
+
 
 
