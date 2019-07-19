@@ -175,7 +175,6 @@ router.get('/signup/confirmation/:activationCode', (req, res, next) => {
 
 // CURRICULUM ROUTER
 router.get('/cv', ensureUserLoggedIn('/user/login'), (req, res, next) => {
-  console.log(req.user.imgPath);
   res.render('user/cv', { user: req.user, navuser: true });
 });
 
@@ -294,6 +293,7 @@ router.get('/profile/:userID', ensureLoggedIn('/'), (req, res, next) => {
   const id = req.params.userID;
   User.findById(id)
     .then((user) => {
+      console.log(user.user.username)
       if (String(req.user._id) === id) {
         res.render('user/profile', { user: user, flag: true, navuser: true });
       } else {
