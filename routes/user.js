@@ -336,11 +336,11 @@ router.get('/confirmation/company/:companyID/process/:processID', ensureUserLogg
     .then((user) => {
       if (user) {
         res.render('user/confirmationProcess', {
-          message: `You are enrolled in "${result[0].name} - ${result[1].title}" process!`
+          message: `You are enrolled in "${result[0].name} - ${result[1].title}" process!`, navuser: true, user: req.user
         });
       } else {
         res.render('user/confirmationProcess', {
-          message: "We didn't find your account. Are you sure you're logged in?"
+          message: "We didn't find your account. Are you sure you're logged in?", navuser: true, user: req.user
         });
       }
     })
@@ -349,7 +349,7 @@ router.get('/confirmation/company/:companyID/process/:processID', ensureUserLogg
   .catch(err => {
     console.log(err);
     res.render('user/confirmationProcess', {
-      message: "We didn't find any process within this adress!"
+      message: "We didn't find any process within this adress!", navuser: true
     });
   });
 });
